@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowArbitraryExtensions": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "jsx": "preserve",
+    "jsxImportSource": "@solidjs/web",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "cequre": ["./cequre"],
+      "cequre-ts": ["./cequre/_generated/runtime/cequre"],
+      "cequre-ts/testing": ["./cequre/_generated/runtime/testing"]
+    },
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext",
+    "types": ["vite/client", "bun"],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src", "**/*", "cequre", "tests"]
+}

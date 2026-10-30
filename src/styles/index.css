@@ -1,0 +1,143 @@
+@import "./tailwind.css";
+
+input,
+select,
+textarea {
+  @apply text-sm;
+}
+
+.font-sans,
+.font-normal {
+  font-family: var(--font-sans);
+}
+
+.font-bold {
+  font-family: var(--font-display);
+  font-weight: 900;
+}
+
+.font-semibold {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+.font-medium {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+html,
+body {
+  @apply bg-base-200 lg:text-[16px] text-[18px];
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+.map {
+  position: relative;
+  z-index: 0;
+}
+
+/* Remove autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.45) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.45);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.65);
+}
+
+.chart-card {
+  @apply bg-base-100 p-6;
+}
+
+.chart-title {
+  @apply capitalize text-sm font-medium text-base-content text-left opacity-70;
+}
+
+.chart-source {
+  @apply text-xs opacity-50 mt-0.5;
+}
+
+button {
+  @apply transition-colors duration-200 hover:cursor-pointer;
+}
+
+.expired {
+  @apply text-red-600 bg-red-100/50 gap-2 px-2 py-1 rounded-md;
+}
+
+.table-th {
+  @apply px-4 py-3 text-xs font-semibold uppercase tracking-wider text-base-content/70;
+  @apply border-b border-base-content/10 whitespace-nowrap text-left select-none;
+}
+
+.table-td {
+  @apply px-4 py-3 text-sm border-b border-base-content/5 text-left;
+}
+
+.PENDING {
+  @apply text-yellow-600 bg-yellow-100/50 text-xs inline-block px-2 py-1 rounded-md border border-yellow-300/50;
+}
+.APPROVED {
+  @apply text-green-600 bg-green-100/50 text-xs inline-block px-2 py-1 rounded-md border border-green-300/50;
+}
+.REJECTED {
+  @apply text-red-600 bg-red-100/50 text-xs inline-block px-2 py-1 rounded-md border border-red-300/50;
+}
+.CANCELLED {
+  @apply text-gray-600 bg-gray-100/50 text-xs inline-block px-2 py-1 rounded-md border border-gray-300/50;
+}
+
+/* Global Thin Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.45) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.45);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.65);
+}

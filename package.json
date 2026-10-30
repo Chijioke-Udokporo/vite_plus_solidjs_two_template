@@ -1,0 +1,45 @@
+{
+  "name": "vite_plus_solidjs_two_template",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vp build",
+    "dev": "cequre dev --app vp dev",
+    "preview": "vp preview"
+  },
+  "dependencies": {
+    "@remix-run/cookie": "^1.0.1",
+    "@solidjs/meta": "^1.0.0-next.2",
+    "@solidjs/router": "^2.0.0-next.31",
+    "@solidjs/web": "^2.0.0-rc.11",
+    "daisyui": "^5.7.50",
+    "solid-icons": "^1.2.0",
+    "solid-js": "^2.0.0-rc.20"
+  },
+  "devDependencies": {
+    "@solidjs/diagnostics": "^2.0.0-rc.20",
+    "@solidjs/testing-library": "^1.0.0-rc.2",
+    "@solidjs/vite-plugin": "^3.0.0-next.53",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/bun": "latest",
+    "@types/node": "latest",
+    "eslint-plugin-solid": "~0.18.1",
+    "filesystem-routing": "^0.4.2",
+    "oxlint": "^1.90.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~7.0.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
+    "vite-plus": "1.4.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "bun",
+      "onFail": "download",
+      "version": "1.4.4"
+    }
+  }
+}
