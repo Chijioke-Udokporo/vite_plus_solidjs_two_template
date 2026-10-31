@@ -1081,7 +1081,7 @@ The runtime's CSRF guard activates on state-changing methods (POST, PUT, PATCH, 
 config {
   security: {
     upload: {
-      visibility: "authenticated"
+      visibility: "private"
       maxFileSize: 26214400
       maxStreamSize: 104857600
       allowedMimeTypes: ["image/png", "image/jpeg", "application/pdf"]
@@ -1092,7 +1092,7 @@ config {
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `visibility` | String | `"authenticated"` | Upload access level (`"authenticated"` requires valid JWT session or API key; `"public"` allows unauthenticated uploads). |
+| `visibility` | String | `"private"` | Upload access level (`"private"` requires valid JWT session or API key; `"public"` allows unauthenticated uploads). |
 | `maxFileSize` | Number | `26214400` (25MB) | Maximum allowed payload size in bytes for multipart form uploads (`POST /api/uploads`). |
 | `maxStreamSize` | Number | `104857600` (100MB) | Maximum allowed payload size in bytes for binary streaming uploads. |
 | `allowedMimeTypes` | String[] | `[]` (all types) | Strict allowlist of accepted MIME types. Requests uploading unlisted MIME types are rejected with `400 Bad Request`. |
@@ -1299,7 +1299,7 @@ config {
     audit: { enabled: false }
     csrfTrustedOrigins: ["https://myapp.com"]
     upload: {
-      visibility: "authenticated"
+      visibility: "private"
       maxFileSize: 26214400
       allowedMimeTypes: ["image/jpeg", "image/png"]
     }
@@ -6466,7 +6466,7 @@ Cequre enforces multi-layered defense-in-depth for file uploads. You can configu
 config {
   security: {
     upload: {
-      visibility: "authenticated"
+      visibility: "private"
       maxFileSize: 26214400
       maxStreamSize: 104857600
       allowedMimeTypes: [
@@ -6482,7 +6482,7 @@ config {
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `visibility` | `"authenticated"` | Upload access level (`"authenticated"` requires valid JWT session or API key; `"public"` allows unauthenticated uploads). |
+| `visibility` | `"private"` | Upload access level (`"private"` requires valid JWT session or API key; `"public"` allows unauthenticated uploads). |
 | `maxFileSize` | `26214400` (25MB) | Maximum payload size in bytes for multipart form uploads (`POST /api/uploads`). |
 | `maxStreamSize` | `104857600` (100MB) | Maximum payload size in bytes for binary streaming uploads. |
 | `allowedMimeTypes` | `[]` (all types allowed) | Strict allowlist of accepted MIME types. Requests uploading unlisted MIME types are rejected with `400 Bad Request`. |
