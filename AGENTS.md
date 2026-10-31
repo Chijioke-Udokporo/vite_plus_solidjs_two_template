@@ -25,3 +25,12 @@ release. Add a tool name to select part of the graph. For example, run
 - [ ] If setup, runtime, or package-manager behavior looks wrong, run `vp env doctor` and include its output when asking for help.
 
 <!--VITE PLUS END-->
+
+## Solid 2 RC + Nitro: confirmed project lesson
+
+- This frontend uses Solid **2 RC** with `@solidjs/vite-plugin`, not the older Vinxi-based SolidStart setup. Do not conflate Solid 2 with SolidStart v2 when choosing documentation.
+- With `solid({ ssr: true, start: true })`, the plugin generates server and client entries from [src/App.tsx](./src/App.tsx) and uses [src/Document.tsx](./src/Document.tsx) as the document shell. Nitro can adopt the generated SSR handler; a handwritten server entry is not required for this setup.
+- Nitro is included for Vercel deployment. The working [Vite configuration](./vite.config.ts) uses `nitro({ preset: "vercel", serverEntry: false })`. That `serverEntry` setting does not disable Solid's generated SSR handler.
+- **Confirmed failure:** a leftover root `index.html` referenced the nonexistent `/src/main.ts`. Nitro auto-detected the HTML as its renderer, taking precedence over its automatic Solid SSR renderer wiring. Adding Nitro therefore produced a missing-entry error/404.
+- **Confirmed resolution:** the user removed the obsolete HTML entry and reported that the app worked. Do not reintroduce a starter HTML entry pointing at `/src/main.ts`, or create a custom server merely to work around this symptom. Inspect renderer selection and stale HTML entries first.
+- This lesson reflects the installed prerelease integration verified on 2026-10-31. Re-check plugin behavior if versions or the entry architecture change.

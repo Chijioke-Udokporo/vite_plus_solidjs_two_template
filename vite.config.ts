@@ -2,8 +2,12 @@ import { defineConfig } from "vite-plus";
 import solid from "@solidjs/vite-plugin";
 import tailwind from "@tailwindcss/vite";
 import { fileRoutes } from "filesystem-routing/vite";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true,
+  },
   plugins: [
     tailwind(),
     fileRoutes({ types: true }),
@@ -14,6 +18,10 @@ export default defineConfig({
       serverFunctions: true,
       diagnostics: true,
     }),
+    nitro({
+      preset: "vercel",
+      serverEntry: false,
+    }),
   ],
   fmt: {},
   lint: {
@@ -21,4 +29,8 @@ export default defineConfig({
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
     options: { typeAware: true, typeCheck: true },
   },
+  server: {
+    port: 4090,
+  },
 });
+false;
