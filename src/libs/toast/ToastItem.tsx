@@ -117,10 +117,25 @@ function getSlideAnimationClass(
     }
   }
 
-  if (position === "top-left" || position === "bottom-left") {
+  if (position === "top-right") {
     return isDismissing
-      ? "animate__animated animate__fadeOutLeft"
-      : "animate__animated animate__fadeInLeft";
+      ? "animate__animated animate__fadeOutTopRight"
+      : "animate__animated animate__fadeInTopRight";
+  }
+  if (position === "top-left") {
+    return isDismissing
+      ? "animate__animated animate__fadeOutTopLeft"
+      : "animate__animated animate__fadeInTopLeft";
+  }
+  if (position === "bottom-right") {
+    return isDismissing
+      ? "animate__animated animate__fadeOutBottomRight"
+      : "animate__animated animate__fadeInBottomRight";
+  }
+  if (position === "bottom-left") {
+    return isDismissing
+      ? "animate__animated animate__fadeOutBottomLeft"
+      : "animate__animated animate__fadeInBottomLeft";
   }
   if (position === "top-center") {
     return isDismissing
@@ -133,8 +148,8 @@ function getSlideAnimationClass(
       : "animate__animated animate__fadeInUp";
   }
   return isDismissing
-    ? "animate__animated animate__fadeOutRight"
-    : "animate__animated animate__fadeInRight";
+    ? "animate__animated animate__fadeOutTopRight"
+    : "animate__animated animate__fadeInTopRight";
 }
 
 export interface ToastItemProps {
@@ -252,62 +267,70 @@ export function ToastItem(props: ToastItemProps): Element {
 
   return (
     <div
-      aria-atomic="true"
-      aria-live={isAssertive() ? "assertive" : "polite"}
-      class={[
-        "alert shadow-lg pointer-events-auto flex items-start sm:items-center justify-between gap-3 text-sm py-3 px-4 rounded-xl",
-        "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]",
-        "backdrop-blur-md select-none",
-        animationClass(),
-        getAlertClass(currentToast().type),
-      ]}
+      class="toast-wrapper"
       data-toast-dismissing={currentToast().isDismissing ? "true" : undefined}
       data-toast-id={currentToast().id}
-      data-toast-type={currentToast().type}
-      onMouseEnter={() => toast.pause(currentToast().id)}
-      onMouseLeave={() => toast.resume(currentToast().id)}
-      onPointerCancel={handlePointerUp}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      role={isAssertive() ? "alert" : "status"}
-      style={dynamicStyle()}
     >
-      <div class="flex items-center gap-3 min-w-0 flex-1">
-        <ToastIcon type={currentToast().type} />
-        <div class="flex flex-col min-w-0">
-          <div class="font-medium leading-snug wrap-break-word">{currentToast().title}</div>
-          <Show when={currentToast().description}>
-            <div class="text-xs opacity-80 mt-0.5 leading-normal wrap-break-word">
-              {currentToast().description}
+      <div class="toast-wrapper-inner">
+        <div
+          aria-atomic="true"
+          aria-live={isAssertive() ? "assertive" : "polite"}
+          class={[
+            "alert shadow-lg pointer-events-auto flex items-start sm:items-center justify-between gap-3 text-sm py-3 px-4 rounded-xl",
+            "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]",
+            "backdrop-blur-md select-none",
+            animationClass(),
+            getAlertClass(currentToast().type),
+          ]}
+          data-toast-dismissing={currentToast().isDismissing ? "true" : undefined}
+          data-toast-id={currentToast().id}
+          data-toast-type={currentToast().type}
+          onMouseEnter={() => toast.pause(currentToast().id)}
+          onMouseLeave={() => toast.resume(currentToast().id)}
+          onPointerCancel={handlePointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          role={isAssertive() ? "alert" : "status"}
+          style={dynamicStyle()}
+        >
+          <div class="flex items-center gap-3 min-w-0 flex-1">
+            <ToastIcon type={currentToast().type} />
+            <div class="flex flex-col min-w-0">
+              <div class="font-medium leading-snug wrap-break-word">{currentToast().title}</div>
+              <Show when={currentToast().description}>
+                <div class="text-xs opacity-80 mt-0.5 leading-normal wrap-break-word">
+                  {currentToast().description}
+                </div>
+              </Show>
             </div>
-          </Show>
+          </div>
+
+          <div class="flex items-center gap-1.5 shrink-0 self-center">
+            <Show when={currentToast().action}>
+              {(action) => (
+                <button
+                  class="btn btn-xs btn-outline rounded-md font-medium transition-transform duration-150 hover:scale-105 active:scale-95"
+                  onClick={() => action().onClick(currentToast())}
+                  type="button"
+                >
+                  {action().label}
+                </button>
+              )}
+            </Show>
+
+            <Show when={currentToast().dismissible}>
+              <button
+                aria-label="Close notification"
+                class="btn btn-ghost btn-xs btn-circle opacity-70 hover:opacity-100 hover:bg-black/10 transition-all duration-150 hover:rotate-90 hover:scale-110 active:scale-90"
+                onClick={() => toast.dismiss(currentToast().id)}
+                type="button"
+              >
+                ✕
+              </button>
+            </Show>
+          </div>
         </div>
-      </div>
-
-      <div class="flex items-center gap-1.5 shrink-0 self-center">
-        <Show when={currentToast().action}>
-          {(action) => (
-            <button
-              class="btn btn-xs btn-outline rounded-md font-medium transition-transform duration-150 hover:scale-105 active:scale-95"
-              onClick={() => action().onClick(currentToast())}
-              type="button"
-            >
-              {action().label}
-            </button>
-          )}
-        </Show>
-
-        <Show when={currentToast().dismissible}>
-          <button
-            aria-label="Close notification"
-            class="btn btn-ghost btn-xs btn-circle opacity-70 hover:opacity-100 hover:bg-black/10 transition-all duration-150 hover:rotate-90 hover:scale-110 active:scale-90"
-            onClick={() => toast.dismiss(currentToast().id)}
-            type="button"
-          >
-            ✕
-          </button>
-        </Show>
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ export function dismiss(id?: string, options?: DismissOptions): void {
   const exitTimer = setTimeout(() => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
     timerMap.delete(`exit-${id}`);
-  }, 200);
+  }, 250);
   timerMap.set(`exit-${id}`, exitTimer);
 }
 

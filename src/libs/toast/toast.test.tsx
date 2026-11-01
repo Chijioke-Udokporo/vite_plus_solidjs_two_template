@@ -71,8 +71,8 @@ describe("Custom Toast System", () => {
       expect(toasts()[0].isDismissing).toBe(true);
       expect(dismissed).toBe(true);
 
-      // Toast is removed after 200ms slide-out animation
-      vi.advanceTimersByTime(200);
+      // Toast is removed after 250ms slide-out animation
+      vi.advanceTimersByTime(250);
       flush();
       expect(toasts()).toHaveLength(0);
     });
@@ -240,13 +240,16 @@ describe("Custom Toast System", () => {
       }
 
       // Should be in slide-out dismissing state
-      const toastEl = document.querySelector(`[data-toast-id="${id}"]`);
+      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`);
       expect(toastEl).not.toBeNull();
       expect(toastEl?.className).toContain("animate__animated");
-      expect(toastEl?.className).toContain("animate__fadeOutRight");
+      expect(toastEl?.className).toContain("animate__fadeOutTopRight");
       expect(toastEl?.getAttribute("data-toast-dismissing")).toBe("true");
 
-      vi.advanceTimersByTime(200);
+      const wrapperEl = document.querySelector(`.toast-wrapper[data-toast-id="${id}"]`);
+      expect(wrapperEl?.getAttribute("data-toast-dismissing")).toBe("true");
+
+      vi.advanceTimersByTime(250);
       flush();
 
       expect(toasts()).toHaveLength(0);
@@ -260,7 +263,7 @@ describe("Custom Toast System", () => {
       toast("Third");
       flush();
 
-      const renderedToasts = document.querySelectorAll("[data-toast-id]");
+      const renderedToasts = document.querySelectorAll(".alert[data-toast-id]");
       expect(renderedToasts).toHaveLength(2);
       expect(renderedToasts[0].textContent).toContain("Second");
       expect(renderedToasts[1].textContent).toContain("Third");
@@ -271,14 +274,14 @@ describe("Custom Toast System", () => {
       const id1 = toast("Right Toast");
       flush();
 
-      const rightToast = document.querySelector(`[data-toast-id="${id1}"]`);
+      const rightToast = document.querySelector(`.alert[data-toast-id="${id1}"]`);
       expect(rightToast?.className).toContain("animate__animated");
-      expect(rightToast?.className).toContain("animate__fadeInRight");
+      expect(rightToast?.className).toContain("animate__fadeInTopRight");
       expect(rightToast?.className).toContain("hover:scale-[1.01]");
 
       toast.dismiss(id1);
       flush();
-      expect(rightToast?.className).toContain("animate__fadeOutRight");
+      expect(rightToast?.className).toContain("animate__fadeOutTopRight");
 
       unmountRight();
       toast.clear();
@@ -288,12 +291,12 @@ describe("Custom Toast System", () => {
       const id2 = toast("Left Toast");
       flush();
 
-      const leftToast = document.querySelector(`[data-toast-id="${id2}"]`);
-      expect(leftToast?.className).toContain("animate__fadeInLeft");
+      const leftToast = document.querySelector(`.alert[data-toast-id="${id2}"]`);
+      expect(leftToast?.className).toContain("animate__fadeInTopLeft");
 
       toast.dismiss(id2);
       flush();
-      expect(leftToast?.className).toContain("animate__fadeOutLeft");
+      expect(leftToast?.className).toContain("animate__fadeOutTopLeft");
 
       unmountLeft();
       toast.clear();
@@ -303,12 +306,34 @@ describe("Custom Toast System", () => {
       const id3 = toast("Bottom Toast");
       flush();
 
-      const bottomToast = document.querySelector(`[data-toast-id="${id3}"]`);
+      const bottomToast = document.querySelector(`.alert[data-toast-id="${id3}"]`);
       expect(bottomToast?.className).toContain("animate__fadeInUp");
 
       toast.dismiss(id3);
       flush();
       expect(bottomToast?.className).toContain("animate__fadeOutDown");
+    });
+
+    it("collapses wrapper height and transitions remaining toasts to new position on dismissal", () => {
+      render(() => <Toaster position="top-right" />);
+      const id1 = toast("First Toast");
+      const id2 = toast("Second Toast");
+      flush();
+
+      const wrapper1 = document.querySelector(`.toast-wrapper[data-toast-id="${id1}"]`);
+      const wrapper2 = document.querySelector(`.toast-wrapper[data-toast-id="${id2}"]`);
+
+      expect(wrapper1).not.toBeNull();
+      expect(wrapper2).not.toBeNull();
+      expect(wrapper1?.getAttribute("data-toast-dismissing")).toBeNull();
+
+      // Dismiss the first toast
+      toast.dismiss(id1);
+      flush();
+
+      // Wrapper marks dismissing for layout transition collapse
+      expect(wrapper1?.getAttribute("data-toast-dismissing")).toBe("true");
+      expect(wrapper2?.getAttribute("data-toast-dismissing")).toBeNull();
     });
 
     it("supports custom Animate.style animation overrides", () => {
