@@ -1,18 +1,15 @@
 collection admins {
-  icon: "users";
-  hideFromApi: true;
-  auth: true;
-
-  fields: {
-    email: email @unique;
-    password: password;
-    role: select("super", "editor") @default("super");
-  }
-
-  access: {
-    read: user.role == "super";
-    create: user.role == "super";
-    update: user.id == id || user.role == "super";
-    delete: user.role == "super";
-  }
+	hideFromApi: true;
+	auth: true;
+	fields {
+		email: email @unique;
+		password: password;
+		role: select("super", "editor") @default("super");
+	}
+	access {
+		read: user.role == "super";
+		create: user.role == "super";
+		update: user.id == id || user.role == "super";
+		delete: user.role == "super";
+	}
 }

@@ -2266,7 +2266,7 @@ export class CequreClient extends CequreCore {
 
   private _init_uploads() {
     return {
-      get: (filename: string, t?: { w?: number; h?: number; fit?: "fill" | "inside"; fmt?: "webp" | "jpeg" | "png"; q?: number }) => this.request<any>('GET', `/api/uploads/${filename}` + (t ? "?" + new URLSearchParams(Object.entries(t).filter(([, v]) => v != null).map(([k, v]) => [k, String(v)])).toString() : "")),
+      get: (filename: string) => this.request<unknown>('GET', `/api/uploads/${filename}`),
       post: (data?: FormData | Record<string, unknown>) => this.request<UploadedFile>('POST', `/api/uploads`, data),
       stream: {
         postStream: (data?: unknown) => this.request<UploadedFile>('POST', `/api/uploads/stream`, data),
