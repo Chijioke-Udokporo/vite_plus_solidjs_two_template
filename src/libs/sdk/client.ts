@@ -7,19 +7,19 @@
  * ==========================================
  * This SDK is auto-generated and has zero dependencies.
  * You can drop this file directly into your frontend, or use it in an AI Agent script.
- *
+ * 
  * --- 1. STANDARD CLIENT USAGE ---
  * import { createCequreClient } from './cequre-sdk';
- *
+ * 
  * export const api = createCequreClient({
  *   baseUrl: "http://localhost:3000",
  *   getToken: () => localStorage.getItem("token") // auto-injects auth
  * });
- *
+ * 
  * // Authentication (for auth-enabled collections)
  * // const { data: session } = await api.auth.login({ email: "alice@example.com", password: "password123" });
  * // localStorage.setItem("token", session.accessToken);
- *
+ * 
  * // Create a record
  * const { data: newUser, error, status } = await api.users.post({ name: "Alice", email: "alice@example.com" });
  * if (error) {
@@ -27,29 +27,29 @@
  * } else {
  *   console.log("Created user:", newUser);
  * }
- *
+ * 
  * // Subscribe to low-level realtime updates
  * const unsubscribe = api.users.subscribeWS((event) => console.log("User updated!", event.data));
- *
+ * 
  * --- 2. REACTIVE REALTIME CLIENT (Convex-style Live Queries & Optimistic Mutations) ---
  * import { createCequreRealtimeClient } from './cequre-sdk';
- *
+ * 
  * export const liveApi = createCequreRealtimeClient({
  *   baseUrl: "http://localhost:3000",
  *   getToken: () => localStorage.getItem("token")
  * });
- *
+ * 
  * // One-shot query
  * // const users = await liveApi.users.query();
- *
+ * 
  * // Reactive subscription (auto-updates on creates/updates/deletes)
  * // const unsubscribe = liveApi.users.subscribe({ query: { where: { email: { contains: "@example.com" } } } }, (users) => {
  * //   console.log("Live users:", users);
  * // });
- *
+ * 
  * // Optimistic mutations
  * // await liveApi.users.mutate.create({ name: "Bob", email: "bob@example.com" });
- *
+ * 
  * --- SERVER / SSR USAGE (Remix, Next.js, etc.) ---
  * // Use .withToken() to create a safe clone for a specific user request
  * const serverApi = api.withToken(requestToken);
@@ -60,13 +60,7 @@
 // ==========================================
 // Generated Types
 // ==========================================
-export type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JSONValue[]
-  | { [key: string]: JSONValue };
+export type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };
 
 export interface StreamEvent<T = unknown> {
   id: string;
@@ -155,20 +149,17 @@ export interface AdminsPopulatedDepth2 {
 }
 
 export interface AdminsWhereInput {
-  id?: string | FilterOperators<string>;
+  id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  email?: string | FilterOperators<string>;
+  email?: (string) | FilterOperators<string>;
   role?: ("super" | "editor") | FilterOperators<"super" | "editor">;
   AND?: Array<AdminsWhereInput>;
   OR?: Array<AdminsWhereInput>;
 }
 
 export type AdminsSortField = "id" | "email" | "role" | "createdAt" | "updatedAt";
-export type AdminsSort =
-  | AdminsSortField
-  | `-${AdminsSortField}`
-  | { [P in AdminsSortField]?: SortOrder };
+export type AdminsSort = AdminsSortField | `-${AdminsSortField}` | { [P in AdminsSortField]?: SortOrder };
 
 export interface AdminsQueryInput {
   where?: AdminsWhereInput;
@@ -219,17 +210,17 @@ export interface AdminsBulkDeleteInput {
 export interface AdminsBulkCreateResult {
   created?: Array<Admins>;
   errors?: Array<{
-    index?: number;
-    error?: CequreError;
-  }>;
+  index?: number;
+  error?: CequreError;
+}>;
 }
 
 export interface AdminsBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
-    id?: string;
-    error?: CequreError;
-  }>;
+  id?: string;
+  error?: CequreError;
+}>;
 }
 
 export interface AdminsAuthResponse {
@@ -362,21 +353,18 @@ export interface UsersPopulatedDepth2 {
 }
 
 export interface UsersWhereInput {
-  id?: string | FilterOperators<string>;
+  id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  name?: string | FilterOperators<string>;
-  email?: string | FilterOperators<string>;
+  name?: (string) | FilterOperators<string>;
+  email?: (string) | FilterOperators<string>;
   role?: ("admin" | "user") | FilterOperators<"admin" | "user">;
   AND?: Array<UsersWhereInput>;
   OR?: Array<UsersWhereInput>;
 }
 
 export type UsersSortField = "id" | "name" | "email" | "role" | "createdAt" | "updatedAt";
-export type UsersSort =
-  | UsersSortField
-  | `-${UsersSortField}`
-  | { [P in UsersSortField]?: SortOrder };
+export type UsersSort = UsersSortField | `-${UsersSortField}` | { [P in UsersSortField]?: SortOrder };
 
 export interface UsersQueryInput {
   where?: UsersWhereInput;
@@ -427,17 +415,17 @@ export interface UsersBulkDeleteInput {
 export interface UsersBulkCreateResult {
   created?: Array<Users>;
   errors?: Array<{
-    index?: number;
-    error?: CequreError;
-  }>;
+  index?: number;
+  error?: CequreError;
+}>;
 }
 
 export interface UsersBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
-    id?: string;
-    error?: CequreError;
-  }>;
+  id?: string;
+  error?: CequreError;
+}>;
 }
 
 export interface UsersAuthResponse {
@@ -494,9 +482,9 @@ export interface CequreJobs {
   payload: JSONValue;
   status: string;
   retries: number;
-  error?: string | null;
-  lockedAt?: string | null;
-  lockedBy?: string | null;
+  error?: (string) | null;
+  lockedAt?: (string) | null;
+  lockedBy?: (string) | null;
 }
 
 export interface CequreJobsCreateInput {
@@ -504,9 +492,9 @@ export interface CequreJobsCreateInput {
   payload: JSONValue;
   status: string;
   retries: number;
-  error?: string | null;
-  lockedAt?: string | null;
-  lockedBy?: string | null;
+  error?: (string) | null;
+  lockedAt?: (string) | null;
+  lockedBy?: (string) | null;
 }
 
 export interface CequreJobsUpdateInput {
@@ -514,9 +502,9 @@ export interface CequreJobsUpdateInput {
   payload?: JSONValue;
   status?: string;
   retries?: number;
-  error?: string | null;
-  lockedAt?: string | null;
-  lockedBy?: string | null;
+  error?: (string) | null;
+  lockedAt?: (string) | null;
+  lockedBy?: (string) | null;
 }
 
 export interface CequreJobsPopulated {
@@ -527,9 +515,9 @@ export interface CequreJobsPopulated {
   payload: JSONValue;
   status: string;
   retries: number;
-  error?: string | null;
-  lockedAt?: string | null;
-  lockedBy?: string | null;
+  error?: (string) | null;
+  lockedAt?: (string) | null;
+  lockedBy?: (string) | null;
 }
 
 export interface CequreJobsPopulatedDepth2 {
@@ -540,41 +528,28 @@ export interface CequreJobsPopulatedDepth2 {
   payload: JSONValue;
   status: string;
   retries: number;
-  error?: string | null;
-  lockedAt?: string | null;
-  lockedBy?: string | null;
+  error?: (string) | null;
+  lockedAt?: (string) | null;
+  lockedBy?: (string) | null;
 }
 
 export interface CequreJobsWhereInput {
-  id?: string | FilterOperators<string>;
+  id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  task?: string | FilterOperators<string>;
-  payload?: JSONValue | FilterOperators<JSONValue>;
-  status?: string | FilterOperators<string>;
-  retries?: number | FilterOperators<number>;
-  error?: (string | null) | FilterOperators<string | null>;
-  lockedAt?: (string | null) | FilterOperators<string | null>;
-  lockedBy?: (string | null) | FilterOperators<string | null>;
+  task?: (string) | FilterOperators<string>;
+  payload?: (JSONValue) | FilterOperators<JSONValue>;
+  status?: (string) | FilterOperators<string>;
+  retries?: (number) | FilterOperators<number>;
+  error?: ((string) | null) | FilterOperators<(string) | null>;
+  lockedAt?: ((string) | null) | FilterOperators<(string) | null>;
+  lockedBy?: ((string) | null) | FilterOperators<(string) | null>;
   AND?: Array<CequreJobsWhereInput>;
   OR?: Array<CequreJobsWhereInput>;
 }
 
-export type CequreJobsSortField =
-  | "id"
-  | "task"
-  | "payload"
-  | "status"
-  | "retries"
-  | "error"
-  | "lockedAt"
-  | "lockedBy"
-  | "createdAt"
-  | "updatedAt";
-export type CequreJobsSort =
-  | CequreJobsSortField
-  | `-${CequreJobsSortField}`
-  | { [P in CequreJobsSortField]?: SortOrder };
+export type CequreJobsSortField = "id" | "task" | "payload" | "status" | "retries" | "error" | "lockedAt" | "lockedBy" | "createdAt" | "updatedAt";
+export type CequreJobsSort = CequreJobsSortField | `-${CequreJobsSortField}` | { [P in CequreJobsSortField]?: SortOrder };
 
 export interface CequreJobsQueryInput {
   where?: CequreJobsWhereInput;
@@ -625,17 +600,17 @@ export interface CequreJobsBulkDeleteInput {
 export interface CequreJobsBulkCreateResult {
   created?: Array<CequreJobs>;
   errors?: Array<{
-    index?: number;
-    error?: CequreError;
-  }>;
+  index?: number;
+  error?: CequreError;
+}>;
 }
 
 export interface CequreJobsBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
-    id?: string;
-    error?: CequreError;
-  }>;
+  id?: string;
+  error?: CequreError;
+}>;
 }
 
 export interface CequrePasswordResets {
@@ -646,7 +621,7 @@ export interface CequrePasswordResets {
   userId: string;
   collection: string;
   expiresAt: number;
-  usedAt?: string | null;
+  usedAt?: (string) | null;
 }
 
 export interface CequrePasswordResetsCreateInput {
@@ -673,7 +648,7 @@ export interface CequrePasswordResetsPopulated {
   userId: string;
   collection: string;
   expiresAt: number;
-  usedAt?: string | null;
+  usedAt?: (string) | null;
 }
 
 export interface CequrePasswordResetsPopulatedDepth2 {
@@ -684,35 +659,24 @@ export interface CequrePasswordResetsPopulatedDepth2 {
   userId: string;
   collection: string;
   expiresAt: number;
-  usedAt?: string | null;
+  usedAt?: (string) | null;
 }
 
 export interface CequrePasswordResetsWhereInput {
-  id?: string | FilterOperators<string>;
+  id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  tokenHash?: string | FilterOperators<string>;
-  userId?: string | FilterOperators<string>;
-  collection?: string | FilterOperators<string>;
-  expiresAt?: number | FilterOperators<number>;
+  tokenHash?: (string) | FilterOperators<string>;
+  userId?: (string) | FilterOperators<string>;
+  collection?: (string) | FilterOperators<string>;
+  expiresAt?: (number) | FilterOperators<number>;
   usedAt?: ((string | Date) | null) | FilterOperators<(string | Date) | null>;
   AND?: Array<CequrePasswordResetsWhereInput>;
   OR?: Array<CequrePasswordResetsWhereInput>;
 }
 
-export type CequrePasswordResetsSortField =
-  | "id"
-  | "tokenHash"
-  | "userId"
-  | "collection"
-  | "expiresAt"
-  | "usedAt"
-  | "createdAt"
-  | "updatedAt";
-export type CequrePasswordResetsSort =
-  | CequrePasswordResetsSortField
-  | `-${CequrePasswordResetsSortField}`
-  | { [P in CequrePasswordResetsSortField]?: SortOrder };
+export type CequrePasswordResetsSortField = "id" | "tokenHash" | "userId" | "collection" | "expiresAt" | "usedAt" | "createdAt" | "updatedAt";
+export type CequrePasswordResetsSort = CequrePasswordResetsSortField | `-${CequrePasswordResetsSortField}` | { [P in CequrePasswordResetsSortField]?: SortOrder };
 
 export interface CequrePasswordResetsQueryInput {
   where?: CequrePasswordResetsWhereInput;
@@ -763,17 +727,17 @@ export interface CequrePasswordResetsBulkDeleteInput {
 export interface CequrePasswordResetsBulkCreateResult {
   created?: Array<CequrePasswordResets>;
   errors?: Array<{
-    index?: number;
-    error?: CequreError;
-  }>;
+  index?: number;
+  error?: CequreError;
+}>;
 }
 
 export interface CequrePasswordResetsBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
-    id?: string;
-    error?: CequreError;
-  }>;
+  id?: string;
+  error?: CequreError;
+}>;
 }
 
 export interface CequreEmailVerifications {
@@ -784,7 +748,7 @@ export interface CequreEmailVerifications {
   userId: string;
   collection: string;
   expiresAt: number;
-  usedAt?: string | null;
+  usedAt?: (string) | null;
 }
 
 export interface CequreEmailVerificationsCreateInput {
@@ -811,7 +775,7 @@ export interface CequreEmailVerificationsPopulated {
   userId: string;
   collection: string;
   expiresAt: number;
-  usedAt?: string | null;
+  usedAt?: (string) | null;
 }
 
 export interface CequreEmailVerificationsPopulatedDepth2 {
@@ -822,35 +786,24 @@ export interface CequreEmailVerificationsPopulatedDepth2 {
   userId: string;
   collection: string;
   expiresAt: number;
-  usedAt?: string | null;
+  usedAt?: (string) | null;
 }
 
 export interface CequreEmailVerificationsWhereInput {
-  id?: string | FilterOperators<string>;
+  id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  tokenHash?: string | FilterOperators<string>;
-  userId?: string | FilterOperators<string>;
-  collection?: string | FilterOperators<string>;
-  expiresAt?: number | FilterOperators<number>;
+  tokenHash?: (string) | FilterOperators<string>;
+  userId?: (string) | FilterOperators<string>;
+  collection?: (string) | FilterOperators<string>;
+  expiresAt?: (number) | FilterOperators<number>;
   usedAt?: ((string | Date) | null) | FilterOperators<(string | Date) | null>;
   AND?: Array<CequreEmailVerificationsWhereInput>;
   OR?: Array<CequreEmailVerificationsWhereInput>;
 }
 
-export type CequreEmailVerificationsSortField =
-  | "id"
-  | "tokenHash"
-  | "userId"
-  | "collection"
-  | "expiresAt"
-  | "usedAt"
-  | "createdAt"
-  | "updatedAt";
-export type CequreEmailVerificationsSort =
-  | CequreEmailVerificationsSortField
-  | `-${CequreEmailVerificationsSortField}`
-  | { [P in CequreEmailVerificationsSortField]?: SortOrder };
+export type CequreEmailVerificationsSortField = "id" | "tokenHash" | "userId" | "collection" | "expiresAt" | "usedAt" | "createdAt" | "updatedAt";
+export type CequreEmailVerificationsSort = CequreEmailVerificationsSortField | `-${CequreEmailVerificationsSortField}` | { [P in CequreEmailVerificationsSortField]?: SortOrder };
 
 export interface CequreEmailVerificationsQueryInput {
   where?: CequreEmailVerificationsWhereInput;
@@ -901,17 +854,17 @@ export interface CequreEmailVerificationsBulkDeleteInput {
 export interface CequreEmailVerificationsBulkCreateResult {
   created?: Array<CequreEmailVerifications>;
   errors?: Array<{
-    index?: number;
-    error?: CequreError;
-  }>;
+  index?: number;
+  error?: CequreError;
+}>;
 }
 
 export interface CequreEmailVerificationsBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
-    id?: string;
-    error?: CequreError;
-  }>;
+  id?: string;
+  error?: CequreError;
+}>;
 }
 
 export interface CequreAuditLog {
@@ -919,38 +872,38 @@ export interface CequreAuditLog {
   createdAt: string;
   updatedAt: string;
   action: string;
-  collection?: string | null;
-  recordId?: string | null;
-  userId?: string | null;
-  requestId?: string | null;
-  sequence?: number | null;
-  metadata?: JSONValue | null;
+  collection?: (string) | null;
+  recordId?: (string) | null;
+  userId?: (string) | null;
+  requestId?: (string) | null;
+  sequence?: (number) | null;
+  metadata?: (JSONValue) | null;
   hmac: string;
-  prevHmac?: string | null;
+  prevHmac?: (string) | null;
 }
 
 export interface CequreAuditLogCreateInput {
   action: string;
-  collection?: string | null;
-  recordId?: string | null;
-  userId?: string | null;
-  requestId?: string | null;
-  sequence?: number | null;
-  metadata?: JSONValue | null;
+  collection?: (string) | null;
+  recordId?: (string) | null;
+  userId?: (string) | null;
+  requestId?: (string) | null;
+  sequence?: (number) | null;
+  metadata?: (JSONValue) | null;
   hmac: string;
-  prevHmac?: string | null;
+  prevHmac?: (string) | null;
 }
 
 export interface CequreAuditLogUpdateInput {
   action?: string;
-  collection?: string | null;
-  recordId?: string | null;
-  userId?: string | null;
-  requestId?: string | null;
-  sequence?: number | null;
-  metadata?: JSONValue | null;
+  collection?: (string) | null;
+  recordId?: (string) | null;
+  userId?: (string) | null;
+  requestId?: (string) | null;
+  sequence?: (number) | null;
+  metadata?: (JSONValue) | null;
   hmac?: string;
-  prevHmac?: string | null;
+  prevHmac?: (string) | null;
 }
 
 export interface CequreAuditLogPopulated {
@@ -958,14 +911,14 @@ export interface CequreAuditLogPopulated {
   createdAt: string;
   updatedAt: string;
   action: string;
-  collection?: string | null;
-  recordId?: string | null;
-  userId?: string | null;
-  requestId?: string | null;
-  sequence?: number | null;
-  metadata?: JSONValue | null;
+  collection?: (string) | null;
+  recordId?: (string) | null;
+  userId?: (string) | null;
+  requestId?: (string) | null;
+  sequence?: (number) | null;
+  metadata?: (JSONValue) | null;
   hmac: string;
-  prevHmac?: string | null;
+  prevHmac?: (string) | null;
 }
 
 export interface CequreAuditLogPopulatedDepth2 {
@@ -973,50 +926,35 @@ export interface CequreAuditLogPopulatedDepth2 {
   createdAt: string;
   updatedAt: string;
   action: string;
-  collection?: string | null;
-  recordId?: string | null;
-  userId?: string | null;
-  requestId?: string | null;
-  sequence?: number | null;
-  metadata?: JSONValue | null;
+  collection?: (string) | null;
+  recordId?: (string) | null;
+  userId?: (string) | null;
+  requestId?: (string) | null;
+  sequence?: (number) | null;
+  metadata?: (JSONValue) | null;
   hmac: string;
-  prevHmac?: string | null;
+  prevHmac?: (string) | null;
 }
 
 export interface CequreAuditLogWhereInput {
-  id?: string | FilterOperators<string>;
+  id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  action?: string | FilterOperators<string>;
-  collection?: (string | null) | FilterOperators<string | null>;
-  recordId?: (string | null) | FilterOperators<string | null>;
-  userId?: (string | null) | FilterOperators<string | null>;
-  requestId?: (string | null) | FilterOperators<string | null>;
-  sequence?: (number | null) | FilterOperators<number | null>;
-  metadata?: null | FilterOperators<JSONValue | null>;
-  hmac?: string | FilterOperators<string>;
-  prevHmac?: (string | null) | FilterOperators<string | null>;
+  action?: (string) | FilterOperators<string>;
+  collection?: ((string) | null) | FilterOperators<(string) | null>;
+  recordId?: ((string) | null) | FilterOperators<(string) | null>;
+  userId?: ((string) | null) | FilterOperators<(string) | null>;
+  requestId?: ((string) | null) | FilterOperators<(string) | null>;
+  sequence?: ((number) | null) | FilterOperators<(number) | null>;
+  metadata?: ((JSONValue) | null) | FilterOperators<(JSONValue) | null>;
+  hmac?: (string) | FilterOperators<string>;
+  prevHmac?: ((string) | null) | FilterOperators<(string) | null>;
   AND?: Array<CequreAuditLogWhereInput>;
   OR?: Array<CequreAuditLogWhereInput>;
 }
 
-export type CequreAuditLogSortField =
-  | "id"
-  | "action"
-  | "collection"
-  | "recordId"
-  | "userId"
-  | "requestId"
-  | "sequence"
-  | "metadata"
-  | "hmac"
-  | "prevHmac"
-  | "createdAt"
-  | "updatedAt";
-export type CequreAuditLogSort =
-  | CequreAuditLogSortField
-  | `-${CequreAuditLogSortField}`
-  | { [P in CequreAuditLogSortField]?: SortOrder };
+export type CequreAuditLogSortField = "id" | "action" | "collection" | "recordId" | "userId" | "requestId" | "sequence" | "metadata" | "hmac" | "prevHmac" | "createdAt" | "updatedAt";
+export type CequreAuditLogSort = CequreAuditLogSortField | `-${CequreAuditLogSortField}` | { [P in CequreAuditLogSortField]?: SortOrder };
 
 export interface CequreAuditLogQueryInput {
   where?: CequreAuditLogWhereInput;
@@ -1067,17 +1005,17 @@ export interface CequreAuditLogBulkDeleteInput {
 export interface CequreAuditLogBulkCreateResult {
   created?: Array<CequreAuditLog>;
   errors?: Array<{
-    index?: number;
-    error?: CequreError;
-  }>;
+  index?: number;
+  error?: CequreError;
+}>;
 }
 
 export interface CequreAuditLogBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
-    id?: string;
-    error?: CequreError;
-  }>;
+  id?: string;
+  error?: CequreError;
+}>;
 }
 
 export interface PostUsersMfaEnrollResponse {
@@ -1095,6 +1033,7 @@ export interface HealthResponse {
   status: string;
   timestamp: string;
 }
+
 
 // ==========================================
 // Cequre Core Engine
@@ -1123,6 +1062,7 @@ export class CequreCore {
   protected config: CequreClientConfig;
 
   constructor(config: CequreClientConfig = {}) {
+
     this.config = { ...config, baseUrl: (config.baseUrl || "").replace(/\/$/, "") };
   }
 
@@ -1141,24 +1081,20 @@ export class CequreCore {
       combinedHeaders = headers;
     } else {
       combinedHeaders = async () => {
-        const p = typeof prevHeaders === "function" ? await prevHeaders() : prevHeaders;
-        const n = typeof headers === "function" ? await headers() : headers;
+        const p = typeof prevHeaders === 'function' ? await prevHeaders() : prevHeaders;
+        const n = typeof headers === 'function' ? await headers() : headers;
         const pObj: Record<string, string> = {};
         if (p instanceof Headers) {
-          p.forEach((v, k) => {
-            pObj[k] = v;
-          });
-        } else if (p && typeof p === "object") {
+          p.forEach((v, k) => { pObj[k] = v; });
+        } else if (p && typeof p === 'object') {
           for (const [k, v] of Object.entries(p)) {
             if (v !== undefined && v !== null) pObj[k] = String(v);
           }
         }
         const nObj: Record<string, string> = {};
         if (n instanceof Headers) {
-          n.forEach((v, k) => {
-            nObj[k] = v;
-          });
-        } else if (n && typeof n === "object") {
+          n.forEach((v, k) => { nObj[k] = v; });
+        } else if (n && typeof n === 'object') {
           for (const [k, v] of Object.entries(n)) {
             if (v !== undefined && v !== null) nObj[k] = String(v);
           }
@@ -1182,7 +1118,7 @@ export class CequreCore {
     }
     if (token) params.set("token", token);
     const qs = params.toString();
-    if (qs) url += (url.includes("?") ? "&" : "?") + qs;
+    if (qs) url += (url.includes('?') ? '&' : '?') + qs;
     return url;
   }
 
@@ -1203,13 +1139,14 @@ export class CequreCore {
   private async resolveHeaders(): Promise<Record<string, string>> {
     const resolved: Record<string, string> = {};
     if (!this.config.headers) return resolved;
-    const raw =
-      typeof this.config.headers === "function" ? await this.config.headers() : this.config.headers;
+    const raw = typeof this.config.headers === 'function'
+      ? await this.config.headers()
+      : this.config.headers;
     if (raw instanceof Headers) {
       raw.forEach((val, key) => {
         resolved[key] = val;
       });
-    } else if (raw && typeof raw === "object") {
+    } else if (raw && typeof raw === 'object') {
       for (const [key, val] of Object.entries(raw)) {
         if (val !== undefined && val !== null) {
           resolved[key] = String(val);
@@ -1219,29 +1156,25 @@ export class CequreCore {
     return resolved;
   }
 
-  private async fetchWithRetry(
-    url: string,
-    options: RequestInit,
-    maxRetries = 2,
-  ): Promise<Response> {
+  private async fetchWithRetry(url: string, options: RequestInit, maxRetries = 2): Promise<Response> {
     let lastError: unknown;
-    const method = (options.method || "GET").toUpperCase();
-    const isIdempotent = method === "GET" || method === "HEAD" || method === "OPTIONS";
+    const method = (options.method || 'GET').toUpperCase();
+    const isIdempotent = method === 'GET' || method === 'HEAD' || method === 'OPTIONS';
     const retries = isIdempotent ? maxRetries : 0;
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         const res = await fetch(url, options);
         if (res.status >= 500 && res.status !== 501 && attempt < retries) {
-          await new Promise((r) => setTimeout(r, 1000 * 2 ** attempt));
+          await new Promise(r => setTimeout(r, 1000 * 2 ** attempt));
           continue;
         }
         return res;
       } catch (err: any) {
-        if (err?.name === "AbortError") throw err;
+        if (err?.name === 'AbortError') throw err;
         lastError = err;
         if (attempt < retries) {
-          await new Promise((r) => setTimeout(r, 1000 * 2 ** attempt));
+          await new Promise(r => setTimeout(r, 1000 * 2 ** attempt));
           continue;
         }
       }
@@ -1250,26 +1183,26 @@ export class CequreCore {
   }
 
   async request<T>(
-    method: string,
-    path: string,
-    data?: any,
-    customHeaders: Record<string, string> = {},
-    signal?: AbortSignal,
+    method: string, 
+    path: string, 
+    data?: any, 
+    customHeaders: Record<string, string> = {}, 
+    signal?: AbortSignal
   ): Promise<SDKResponse<T>> {
     const clientHeaders = await this.resolveHeaders();
-    const headers: Record<string, string> = {
-      "X-Cequre-CSRF": "1",
+    const headers: Record<string, string> = { 
+      'X-Cequre-CSRF': '1',
       ...clientHeaders,
-      ...customHeaders,
+      ...customHeaders 
     };
     const auth = await this.getAuthHeader();
-    if (auth && !headers["Authorization"]) headers["Authorization"] = auth;
+    if (auth && !headers['Authorization']) headers['Authorization'] = auth;
 
     const options: RequestInit = {
       method,
       headers,
       credentials: this.config.credentials,
-      signal,
+      signal
     };
 
     if (data) {
@@ -1281,9 +1214,9 @@ export class CequreCore {
           if (val == null) continue;
           if (val instanceof File || val instanceof Blob) {
             formData.append(key, val);
-          } else if (typeof val === "boolean") {
-            formData.append(key, val ? "true" : "false");
-          } else if (typeof val === "object") {
+          } else if (typeof val === 'boolean') {
+            formData.append(key, val ? 'true' : 'false');
+          } else if (typeof val === 'object') {
             formData.append(key, JSON.stringify(val));
           } else {
             formData.append(key, String(val));
@@ -1291,121 +1224,83 @@ export class CequreCore {
         }
         options.body = formData;
       } else {
-        headers["Content-Type"] = "application/json";
+        headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
       }
     }
 
     try {
       const res = await this.fetchWithRetry(`${this.config.baseUrl}${path}`, options);
-
+      
       if (!res.ok) {
         let errData;
         const errText = await res.text();
-        try {
-          errData = JSON.parse(errText);
-        } catch {
+        try { 
+          errData = JSON.parse(errText); 
+        } catch { 
           errData = {
             code: "SERVER_ERROR",
             message: errText || res.statusText || "Unknown server error",
             statusCode: res.status,
             timestamp: new Date().toISOString(),
-            path,
+            path
           };
         }
-
+        
         const errorObject: CequreError = {
           code: errData?.code || "UNKNOWN_ERROR",
-          message:
-            errData?.message ||
-            (typeof errData?.error === "string" ? errData.error : "An unexpected error occurred"),
+          message: errData?.message || (typeof errData?.error === "string" ? errData.error : "An unexpected error occurred"),
           statusCode: errData?.statusCode || res.status,
           timestamp: errData?.timestamp || new Date().toISOString(),
           path: errData?.path || path,
-          stack: errData?.stack,
+          stack: errData?.stack
         };
 
-        const result = {
-          data: null,
-          error: errorObject,
-          status: res.status,
-          url: res.url || path,
-          headers: res.headers,
-        };
+        const result = { data: null, error: errorObject, status: res.status, url: res.url || path, headers: res.headers };
         if (this.config.onResponse) await this.config.onResponse(result);
         return result;
       }
-
-      if (res.status === 204 || res.headers.get("content-length") === "0") {
-        const result = {
-          data: undefined as unknown as T,
-          error: null,
-          status: res.status,
-          url: res.url || path,
-          headers: res.headers,
-        };
+      
+      if (res.status === 204 || res.headers.get('content-length') === '0') {
+        const result = { data: undefined as unknown as T, error: null, status: res.status, url: res.url || path, headers: res.headers };
         if (this.config.onResponse) await this.config.onResponse(result);
         return result;
       }
-
-      const contentType = res.headers.get("content-type") || "";
-      if (!contentType.includes("application/json") && !contentType.includes("text/")) {
+      
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json') && !contentType.includes('text/')) {
         const blob = await res.blob();
-        const result = {
-          data: blob as unknown as T,
-          error: null,
-          status: res.status,
-          url: res.url || path,
-          headers: res.headers,
-        };
+        const result = { data: blob as unknown as T, error: null, status: res.status, url: res.url || path, headers: res.headers };
         if (this.config.onResponse) await this.config.onResponse(result);
         return result;
       }
 
       const text = await res.text();
-
+      
       if (!text) {
-        const result = {
-          data: undefined as unknown as T,
-          error: null,
-          status: res.status,
-          url: res.url || path,
-          headers: res.headers,
-        };
+        const result = { data: undefined as unknown as T, error: null, status: res.status, url: res.url || path, headers: res.headers };
         if (this.config.onResponse) await this.config.onResponse(result);
         return result;
       }
-
+      
       try {
-        const result = {
-          data: JSON.parse(text) as T,
-          error: null,
-          status: res.status,
-          url: res.url || path,
-          headers: res.headers,
-        };
+        const result = { data: JSON.parse(text) as T, error: null, status: res.status, url: res.url || path, headers: res.headers };
         if (this.config.onResponse) await this.config.onResponse(result);
         return result;
       } catch {
-        const result = {
-          data: text as unknown as T,
-          error: null,
-          status: res.status,
-          url: res.url || path,
-          headers: res.headers,
-        };
+        const result = { data: text as unknown as T, error: null, status: res.status, url: res.url || path, headers: res.headers };
         if (this.config.onResponse) await this.config.onResponse(result);
         return result;
       }
     } catch (error: any) {
-      if (error?.name === "AbortError") throw error;
+      if (error?.name === 'AbortError') throw error;
       if (error instanceof Response) throw error;
       const networkError: CequreError = {
         code: "NETWORK_ERROR",
         message: error?.message || "Failed to connect to the server",
         statusCode: 0,
         timestamp: new Date().toISOString(),
-        path,
+        path
       };
       const result = { data: null as any, error: networkError, status: 0, url: path, headers: {} };
       if (this.config.onResponse) await this.config.onResponse(result);
@@ -1414,17 +1309,14 @@ export class CequreCore {
   }
 
   private containsFiles(data: any): boolean {
-    if (!data || typeof data !== "object") return false;
+    if (!data || typeof data !== 'object') return false;
     for (const key of Object.keys(data)) {
       if (data[key] instanceof File || data[key] instanceof Blob) return true;
     }
     return false;
   }
 
-  async uploadLargeFile(
-    file: File,
-    options?: { chunkSize?: number; onProgress?: (percent: number) => void },
-  ): Promise<SDKResponse<UploadedFile>> {
+  async uploadLargeFile(file: File, options?: { chunkSize?: number, onProgress?: (percent: number) => void }): Promise<SDKResponse<UploadedFile>> {
     const prefix = "/api"; // The standard Cequre prefix
     const token = await this.resolveToken();
     const clientHeaders = await this.resolveHeaders();
@@ -1449,12 +1341,7 @@ export class CequreCore {
       const errText = await res.text().catch(() => "");
       return {
         data: null,
-        error: {
-          code: "UPLOAD_ERROR",
-          message: errText || `Upload failed with status ${res.status}`,
-          statusCode: res.status,
-          timestamp: new Date().toISOString(),
-        },
+        error: { code: "UPLOAD_ERROR", message: errText || `Upload failed with status ${res.status}`, statusCode: res.status, timestamp: new Date().toISOString() },
         status: res.status,
         url: `${prefix}/uploads/stream`,
         headers: res.headers,
@@ -1535,27 +1422,17 @@ export class CequreCore {
 
     return {
       data: null,
-      error: {
-        code: "UPLOAD_ERROR",
-        message: "Invalid upload response",
-        statusCode: 500,
-        timestamp: new Date().toISOString(),
-      },
+      error: { code: "UPLOAD_ERROR", message: "Invalid upload response", statusCode: 500, timestamp: new Date().toISOString() },
       status: 500,
       url: `${prefix}/uploads/stream`,
       headers: res.headers,
     };
   }
 
-  async *streamRequest(
-    method: string,
-    path: string,
-    data?: any,
-    options?: RequestInit,
-  ): AsyncGenerator<string, void, unknown> {
+  async *streamRequest(method: string, path: string, data?: any, options?: RequestInit): AsyncGenerator<string, void, unknown> {
     const clientHeaders = await this.resolveHeaders();
     const headers = new Headers();
-    headers.set("X-Cequre-CSRF", "1");
+    headers.set('X-Cequre-CSRF', '1');
     for (const [k, v] of Object.entries(clientHeaders)) {
       headers.set(k, v);
     }
@@ -1563,14 +1440,14 @@ export class CequreCore {
       new Headers(options.headers).forEach((v, k) => headers.set(k, v));
     }
     const token = await this.resolveToken();
-    if (token && !headers.has("Authorization")) {
-      headers.set("Authorization", `Bearer ${token}`);
+    if (token && !headers.has('Authorization')) {
+      headers.set('Authorization', `Bearer ${token}`);
     }
 
     const fetchOptions: RequestInit = {
       ...options,
       method,
-      headers,
+      headers
     };
 
     if (data !== undefined) {
@@ -1581,9 +1458,9 @@ export class CequreCore {
           if (val == null) continue;
           if (val instanceof File || val instanceof Blob) {
             formData.append(key, val);
-          } else if (typeof val === "boolean") {
-            formData.append(key, val ? "true" : "false");
-          } else if (typeof val === "object") {
+          } else if (typeof val === 'boolean') {
+            formData.append(key, val ? 'true' : 'false');
+          } else if (typeof val === 'object') {
             formData.append(key, JSON.stringify(val));
           } else {
             formData.append(key, String(val));
@@ -1591,13 +1468,13 @@ export class CequreCore {
         }
         fetchOptions.body = formData;
       } else {
-        headers.set("Content-Type", "application/json");
+        headers.set('Content-Type', 'application/json');
         fetchOptions.body = JSON.stringify(data);
       }
     }
 
     const res = await this.fetchWithRetry(`${this.config.baseUrl}${path}`, fetchOptions);
-
+    
     if (!res.ok) {
       let errText = await res.text().catch(() => "");
       throw new Error(`Stream request failed with status ${res.status}: ${errText}`);
@@ -1607,7 +1484,7 @@ export class CequreCore {
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-
+    
     try {
       while (true) {
         const { done, value } = await reader.read();
@@ -1633,14 +1510,14 @@ export class CequreCore {
     let url = `${this.config.baseUrl}${path}`;
     const token = await this.resolveToken();
     if (token) {
-      url += (url.includes("?") ? "&" : "?") + `token=${encodeURIComponent(token)}`;
+      url += (url.includes('?') ? '&' : '?') + `token=${encodeURIComponent(token)}`;
     }
-
-    if (typeof (globalThis as any).EventSource !== "undefined") {
+    
+    if (typeof (globalThis as any).EventSource !== 'undefined') {
       const es = new (globalThis as any).EventSource(url);
       let retryCount = 0;
       const maxRetries = 5;
-
+      
       es.onmessage = (e: { data: string }) => {
         retryCount = 0;
         try {
@@ -1652,7 +1529,7 @@ export class CequreCore {
           }
         } catch {}
       };
-
+      
       es.onerror = (_e: any) => {
         retryCount++;
         if (retryCount >= maxRetries) {
@@ -1661,7 +1538,7 @@ export class CequreCore {
           es.onerror = null;
         }
       };
-
+      
       return () => {
         es.close();
         es.onmessage = null;
@@ -1678,7 +1555,7 @@ export class CequreCore {
       if (manualClose) return;
       abortController = new AbortController();
       const clientHeaders = await this.resolveHeaders();
-      const headers: Record<string, string> = {
+      const headers: Record<string, string> = { 
         Accept: "text/event-stream",
         ...clientHeaders,
       };
@@ -1716,11 +1593,7 @@ export class CequreCore {
             if (eventData) {
               try {
                 const parsed = JSON.parse(eventData);
-                if (
-                  parsed &&
-                  typeof parsed === "object" &&
-                  ("data" in parsed || "type" in parsed)
-                ) {
+                if (parsed && typeof parsed === "object" && ("data" in parsed || "type" in parsed)) {
                   onEvent(parsed);
                 } else if (eventName) {
                   const parts = eventName.split(":");
@@ -1748,9 +1621,7 @@ export class CequreCore {
 
     return () => {
       manualClose = true;
-      try {
-        abortController.abort();
-      } catch {}
+      try { abortController.abort(); } catch {}
     };
   }
 
@@ -1758,7 +1629,7 @@ export class CequreCore {
     const isPath = roomOrPath.startsWith("/");
     const wsPath = isPath ? roomOrPath : `/api/ws`;
     const room = isPath ? null : roomOrPath;
-    const wsUrl = (this.config.baseUrl || "").replace(/^http/, "ws") + wsPath;
+    const wsUrl = (this.config.baseUrl || "").replace(/^http/, 'ws') + wsPath;
     const token = await this.resolveToken();
     let ws: WebSocket;
     let retryCount = 0;
@@ -1769,28 +1640,19 @@ export class CequreCore {
       ws = new WebSocket(wsUrl);
       ws.onopen = () => {
         retryCount = 0;
-        if (token) ws.send(JSON.stringify({ type: "auth", token }));
-        if (room) ws.send(JSON.stringify({ type: "join", room }));
+        if (token) ws.send(JSON.stringify({ type: 'auth', token }));
+        if (room) ws.send(JSON.stringify({ type: 'join', room }));
       };
       ws.onmessage = (e: { data: string }) => {
         try {
           const msg = JSON.parse(e.data);
-          if (
-            msg &&
-            typeof msg === "object" &&
-            (msg.type === "connected" ||
-              msg.type === "joined" ||
-              msg.type === "left" ||
-              msg.type === "pong")
-          ) {
+          if (msg && typeof msg === 'object' && (msg.type === 'connected' || msg.type === 'joined' || msg.type === 'left' || msg.type === 'pong')) {
             return;
           }
           onEvent(msg);
         } catch {}
       };
-      ws.onerror = () => {
-        /* consumer observes via onclose */
-      };
+      ws.onerror = () => { /* consumer observes via onclose */ };
       ws.onclose = () => {
         if (manualClose) return;
         if (retryCount < maxRetries) {
@@ -1799,15 +1661,13 @@ export class CequreCore {
         }
       };
     };
-
+    
     connect();
-
+    
     return () => {
       manualClose = true;
       if (ws && ws.readyState === 1 && room) {
-        try {
-          ws.send(JSON.stringify({ type: "leave", room }));
-        } catch {}
+        try { ws.send(JSON.stringify({ type: 'leave', room })); } catch {}
       }
       ws?.close();
       if (ws) {
@@ -1891,7 +1751,7 @@ export class CequreRealtimeCore {
   subscribeCollection<T>(
     collection: string,
     params: any,
-    callback: (data: T[]) => void,
+    callback: (data: T[]) => void
   ): () => void {
     const queryKey = `${collection}:${JSON.stringify(params || {})}`;
     let sub = this._subscriptions.get(queryKey);
@@ -1911,9 +1771,7 @@ export class CequreRealtimeCore {
     sub.listeners.add(callback);
 
     if (sub.initialized) {
-      try {
-        callback(sub.data);
-      } catch {}
+      try { callback(sub.data); } catch {}
     }
 
     this._ensureSubscription(sub);
@@ -1938,9 +1796,7 @@ export class CequreRealtimeCore {
           sub.initialized = true;
           sub.pendingPromise = undefined;
           for (const listener of sub.listeners) {
-            try {
-              listener(sub.data);
-            } catch {}
+            try { listener(sub.data); } catch {}
           }
           return docs;
         })
@@ -1992,9 +1848,7 @@ export class CequreRealtimeCore {
     if (!stillNeeded) {
       const channelEntry = this._activeChannels.get(collection);
       if (channelEntry) {
-        try {
-          channelEntry.unsubscribe();
-        } catch {}
+        try { channelEntry.unsubscribe(); } catch {}
         this._activeChannels.delete(collection);
       }
     }
@@ -2024,9 +1878,7 @@ export class CequreRealtimeCore {
           if (existingIdx !== -1) {
             sub.data[existingIdx] = { ...sub.data[existingIdx], ...item };
           } else {
-            const optIdx = sub.data.findIndex(
-              (x: any) => typeof x.id === "string" && x.id.startsWith("_opt_"),
-            );
+            const optIdx = sub.data.findIndex((x: any) => typeof x.id === "string" && x.id.startsWith("_opt_"));
             if (optIdx !== -1 && !String(item.id).startsWith("_opt_")) {
               sub.data[optIdx] = item;
             } else {
@@ -2036,12 +1888,7 @@ export class CequreRealtimeCore {
           sub.data = this._sortItems(sub.data, sub.params?.query?.sort || sub.params?.sort);
           changed = true;
         }
-      } else if (
-        action === "updated" ||
-        action === "update" ||
-        action === "patch" ||
-        action === "put"
-      ) {
+      } else if (action === "updated" || action === "update" || action === "patch" || action === "put") {
         const idx = sub.data.findIndex((x: any) => x.id === item.id);
         const matches = this._matchesWhere(item, sub.params?.query?.where || sub.params?.where);
         if (matches) {
@@ -2068,9 +1915,7 @@ export class CequreRealtimeCore {
       if (changed) {
         sub.lastEventId = event.id;
         for (const listener of sub.listeners) {
-          try {
-            listener([...sub.data]);
-          } catch {}
+          try { listener([...sub.data]); } catch {}
         }
       }
     }
@@ -2099,31 +1944,13 @@ export class CequreRealtimeCore {
       if (condition !== null && typeof condition === "object" && !Array.isArray(condition)) {
         if ("equals" in condition && val !== (condition as any).equals) return false;
         if ("notEquals" in condition && val === (condition as any).notEquals) return false;
-        if (
-          "contains" in condition &&
-          !String(val ?? "")
-            .toLowerCase()
-            .includes(String((condition as any).contains).toLowerCase())
-        )
-          return false;
-        if (
-          "in" in condition &&
-          Array.isArray((condition as any).in) &&
-          !(condition as any).in.includes(val)
-        )
-          return false;
-        if (
-          "notIn" in condition &&
-          Array.isArray((condition as any).notIn) &&
-          (condition as any).notIn.includes(val)
-        )
-          return false;
+        if ("contains" in condition && !String(val ?? "").toLowerCase().includes(String((condition as any).contains).toLowerCase())) return false;
+        if ("in" in condition && Array.isArray((condition as any).in) && !(condition as any).in.includes(val)) return false;
+        if ("notIn" in condition && Array.isArray((condition as any).notIn) && (condition as any).notIn.includes(val)) return false;
         if ("greaterThan" in condition && !(val > (condition as any).greaterThan)) return false;
-        if ("greaterThanOrEqual" in condition && !(val >= (condition as any).greaterThanOrEqual))
-          return false;
+        if ("greaterThanOrEqual" in condition && !(val >= (condition as any).greaterThanOrEqual)) return false;
         if ("lessThan" in condition && !(val < (condition as any).lessThan)) return false;
-        if ("lessThanOrEqual" in condition && !(val <= (condition as any).lessThanOrEqual))
-          return false;
+        if ("lessThanOrEqual" in condition && !(val <= (condition as any).lessThanOrEqual)) return false;
       } else {
         if (val !== condition) return false;
       }
@@ -2170,7 +1997,7 @@ export class CequreRealtimeCore {
   async mutateCreate<T, Input>(
     collection: string,
     data: Input,
-    serverCall: () => Promise<SDKResponse<T>>,
+    serverCall: () => Promise<SDKResponse<T>>
   ): Promise<T> {
     const tempId = `_opt_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     const optimisticDoc = {
@@ -2211,7 +2038,7 @@ export class CequreRealtimeCore {
     collection: string,
     id: string,
     data: Input,
-    serverCall: () => Promise<SDKResponse<T>>,
+    serverCall: () => Promise<SDKResponse<T>>
   ): Promise<T> {
     const backupDocs = new Map<string, any>();
     for (const [key, sub] of this._subscriptions) {
@@ -2249,9 +2076,7 @@ export class CequreRealtimeCore {
           const idx = sub.data.findIndex((x: any) => x.id === id);
           if (idx !== -1) sub.data[idx] = oldDoc;
           for (const listener of sub.listeners) {
-            try {
-              listener([...sub.data]);
-            } catch {}
+            try { listener([...sub.data]); } catch {}
           }
         }
       }
@@ -2262,7 +2087,7 @@ export class CequreRealtimeCore {
   async mutateDelete(
     collection: string,
     id: string,
-    serverCall: () => Promise<SDKResponse<any>>,
+    serverCall: () => Promise<SDKResponse<any>>
   ): Promise<void> {
     const backupDocs = new Map<string, any>();
     for (const [key, sub] of this._subscriptions) {
@@ -2292,9 +2117,7 @@ export class CequreRealtimeCore {
           sub.data = [...sub.data, oldDoc];
           sub.data = this._sortItems(sub.data, sub.params?.query?.sort || sub.params?.sort);
           for (const listener of sub.listeners) {
-            try {
-              listener([...sub.data]);
-            } catch {}
+            try { listener([...sub.data]); } catch {}
           }
         }
       }
@@ -2320,20 +2143,13 @@ export class CequreRealtimeCore {
           }
         }
         for (const listener of sub.listeners) {
-          try {
-            listener([...sub.data]);
-          } catch {}
+          try { listener([...sub.data]); } catch {}
         }
       } else if (realIdx === -1) {
         if (this._matchesWhere(serverDoc, sub.params?.query?.where || sub.params?.where)) {
-          sub.data = this._sortItems(
-            [...sub.data, serverDoc],
-            sub.params?.query?.sort || sub.params?.sort,
-          );
+          sub.data = this._sortItems([...sub.data, serverDoc], sub.params?.query?.sort || sub.params?.sort);
           for (const listener of sub.listeners) {
-            try {
-              listener([...sub.data]);
-            } catch {}
+            try { listener([...sub.data]); } catch {}
           }
         }
       }
@@ -2354,8 +2170,8 @@ export class CequreRealtimeCore {
 
     try {
       const res = await this.client.request<StreamEvent[]>(
-        "GET",
-        `${this.prefix}/${collection}/stream?lastEventId=${encodeURIComponent(oldestLastEventId)}`,
+        'GET',
+        `${this.prefix}/${collection}/stream?lastEventId=${encodeURIComponent(oldestLastEventId)}`
       );
       if (res.data && Array.isArray(res.data)) {
         for (const evt of res.data) {
@@ -2368,268 +2184,217 @@ export class CequreRealtimeCore {
   }
 }
 
+
 export class CequreClient extends CequreCore {
+
   private _cache: Record<string, any> = {};
 
   private _init_users() {
     return {
-      schema: {
-        name: { type: "text", required: true },
-        email: { type: "email", required: true },
-        role: { type: "select", required: true },
-      } as const,
+      schema: {"name":{"type":"text","required":true},"email":{"type":"email","required":true},"role":{"type":"select","required":true}} as const,
       get: ((params?: { id?: string; query?: UsersQueryInput; depth?: number }) => {
-        const qObj =
-          params?.query ||
-          ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);
-        if (params?.id)
-          return this.request<any>(
-            "GET",
-            `/api/users/${params.id}${qObj ? "?" + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ""}`,
-          );
-        return this.request<any>(
-          "GET",
-          `/api/users${qObj ? "?" + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ""}`,
-        );
+        const qObj = params?.query || ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);
+        if (params?.id) return this.request<any>('GET', `/api/users/${params.id}${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
+        return this.request<any>('GET', `/api/users${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
       }) as {
-        (params: { id: string; query: { depth: 2 } }): Promise<SDKResponse<UsersPopulatedDepth2>>;
-        (params: { id: string; query: { depth: 1 } }): Promise<SDKResponse<UsersPopulated>>;
-        (params: { id: string; query?: { depth?: number } }): Promise<SDKResponse<Users>>;
-        (params: {
-          query: UsersQueryInput & { depth: 2 };
-        }): Promise<SDKResponse<PaginatedUsersPopulatedDepth2>>;
-        (params: {
-          query: UsersQueryInput & { depth: 1 };
-        }): Promise<SDKResponse<PaginatedUsersPopulated>>;
+        (params: { id: string, query: { depth: 2 } }): Promise<SDKResponse<UsersPopulatedDepth2>>;
+        (params: { id: string, query: { depth: 1 } }): Promise<SDKResponse<UsersPopulated>>;
+        (params: { id: string, query?: { depth?: number } }): Promise<SDKResponse<Users>>;
+        (params: { query: UsersQueryInput & { depth: 2 } }): Promise<SDKResponse<PaginatedUsersPopulatedDepth2>>;
+        (params: { query: UsersQueryInput & { depth: 1 } }): Promise<SDKResponse<PaginatedUsersPopulated>>;
         (params?: { query?: UsersQueryInput }): Promise<SDKResponse<PaginatedUsers>>;
       },
-      post: (data: UsersCreateInput) => this.request<Users>("POST", `/api/users`, data),
-      patch: (id: string, data: UsersUpdateInput) =>
-        this.request<Users>("PATCH", `/api/users/${id}`, data),
-      delete: (id: string) => this.request<void>("DELETE", `/api/users/${id}`),
-      createMany: (items: UsersCreateInput[]) =>
-        this.request<{ created: Users[]; errors: { index: number; error: unknown }[] }>(
-          "POST",
-          `/api/users/bulk`,
-          { items },
-        ),
-      deleteMany: (ids: string[]) =>
-        this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>(
-          "DELETE",
-          `/api/users/bulk`,
-          { ids },
-        ),
-      subscribeSSE: async (
-        onEvent: (event: { type: "created" | "updated" | "deleted"; data: Users }) => void,
-      ) => await this.subscribeSSE("users", onEvent),
-      subscribeWS: async (
-        onEvent: (event: { type: "created" | "updated" | "deleted"; data: Users }) => void,
-      ) => await this.subscribeWS("users", onEvent),
-      durableStream: (params?: { lastEventId?: string }) =>
-        this.request<StreamEvent<Users>[]>(
-          "GET",
-          `/api/users/stream${params?.lastEventId ? "?lastEventId=" + encodeURIComponent(params.lastEventId) : ""}`,
-        ),
-      stream: (params?: { lastEventId?: string }) =>
-        this.request<StreamEvent<Users>[]>(
-          "GET",
-          `/api/users/stream${params?.lastEventId ? "?lastEventId=" + encodeURIComponent(params.lastEventId) : ""}`,
-        ),
+      post: (data: UsersCreateInput) => this.request<Users>('POST', `/api/users`, data),
+      patch: (id: string, data: UsersUpdateInput) => this.request<Users>('PATCH', `/api/users/${id}`, data),
+      delete: (id: string) => this.request<void>('DELETE', `/api/users/${id}`),
+      createMany: (items: UsersCreateInput[]) => this.request<{ created: Users[]; errors: { index: number; error: unknown }[] }>('POST', `/api/users/bulk`, { items }),
+      deleteMany: (ids: string[]) => this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>('DELETE', `/api/users/bulk`, { ids }),
+      subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Users }) => void) => await this.subscribeSSE('users', onEvent),
+      subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Users }) => void) => await this.subscribeWS('users', onEvent),
+      durableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Users>[]>('GET', `/api/users/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      stream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Users>[]>('GET', `/api/users/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
       changePassword: {
-        postChangePassword: (data?: unknown) =>
-          this.request<unknown>("POST", `/api/users/change-password`, data),
-        post: (data?: unknown) => this.request<unknown>("POST", `/api/users/change-password`, data),
+        postChangePassword: (data?: unknown) => this.request<unknown>('POST', `/api/users/change-password`, data),
+        post: (data?: unknown) => this.request<unknown>('POST', `/api/users/change-password`, data),
       },
       sessions: {
-        getSessions: () => this.request<unknown>("GET", `/api/users/sessions`),
-        get: () => this.request<unknown>("GET", `/api/users/sessions`),
+        getSessions: () => this.request<unknown>('GET', `/api/users/sessions`),
+        get: () => this.request<unknown>('GET', `/api/users/sessions`),
         byId: (id: string) => ({
-          delete: () => this.request<unknown>("DELETE", `/api/users/sessions/${id}`),
-        }),
+          delete: () => this.request<unknown>('DELETE', `/api/users/sessions/${id}`),
+        })
       },
     };
   }
 
   get users(): ReturnType<typeof this._init_users> {
-    if (!this._cache["users"]) {
-      this._cache["users"] = this._init_users();
+    if (!this._cache['users']) {
+      this._cache['users'] = this._init_users();
     }
-    return this._cache["users"];
+    return this._cache['users'];
   }
 
   private _init_auth() {
     return {
       me: ((params?: { query?: { depth?: number } }) => {
-        const qObj = params?.query;
-        return this.request<any>(
-          "GET",
-          `/api/users/me${qObj ? "?" + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ""}`,
-        );
-      }) as {
-        (params: { query: { depth: 2 } }): Promise<SDKResponse<UsersPopulatedDepth2>>;
-        (params: { query: { depth: 1 } }): Promise<SDKResponse<UsersPopulated>>;
-        (params?: { query?: { depth?: number } }): Promise<SDKResponse<Users>>;
-      },
-      register: (data: UsersRegisterInput) =>
-        this.request<UsersAuthResponse>("POST", `/api/users/register`, data),
-      login: (data: UsersLoginInput) =>
-        this.request<UsersAuthResponse>("POST", `/api/users/login`, data),
-      refresh: (data: UsersRefreshInput) =>
-        this.request<UsersAuthResponse>("POST", `/api/users/refresh`, data),
-      logout: (data?: unknown) => this.request<unknown>("POST", `/api/users/logout`, data),
-      forgotPassword: (data: UsersForgotPasswordInput) =>
-        this.request<unknown>("POST", `/api/users/forgot-password`, data),
-      resetPassword: (data: UsersResetPasswordInput) =>
-        this.request<unknown>("POST", `/api/users/reset-password`, data),
-      mfaEnroll: (data?: PostUsersMfaEnrollRequestBody) =>
-        this.request<PostUsersMfaEnrollResponse>("POST", `/api/users/mfa/enroll`, data),
-      mfaVerify: (data: UsersMfaVerifyInput) =>
-        this.request<unknown>("POST", `/api/users/mfa/verify`, data),
-      mfaLogin: (data: UsersMfaLoginInput) =>
-        this.request<UsersAuthResponse>("POST", `/api/users/mfa/login`, data),
-      mfaDisable: (data: UsersMfaVerifyInput) =>
-        this.request<unknown>("POST", `/api/users/mfa/disable`, data),
+      const qObj = params?.query;
+      return this.request<any>('GET', `/api/users/me${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
+    }) as {
+      (params: { query: { depth: 2 } }): Promise<SDKResponse<UsersPopulatedDepth2>>;
+      (params: { query: { depth: 1 } }): Promise<SDKResponse<UsersPopulated>>;
+      (params?: { query?: { depth?: number } }): Promise<SDKResponse<Users>>;
+    },
+      register: (data: UsersRegisterInput) => this.request<UsersAuthResponse>('POST', `/api/users/register`, data),
+      login: (data: UsersLoginInput) => this.request<UsersAuthResponse>('POST', `/api/users/login`, data),
+      refresh: (data: UsersRefreshInput) => this.request<UsersAuthResponse>('POST', `/api/users/refresh`, data),
+      logout: (data?: unknown) => this.request<unknown>('POST', `/api/users/logout`, data),
+      forgotPassword: (data: UsersForgotPasswordInput) => this.request<unknown>('POST', `/api/users/forgot-password`, data),
+      resetPassword: (data: UsersResetPasswordInput) => this.request<unknown>('POST', `/api/users/reset-password`, data),
+      mfaEnroll: (data?: PostUsersMfaEnrollRequestBody) => this.request<PostUsersMfaEnrollResponse>('POST', `/api/users/mfa/enroll`, data),
+      mfaVerify: (data: UsersMfaVerifyInput) => this.request<unknown>('POST', `/api/users/mfa/verify`, data),
+      mfaLogin: (data: UsersMfaLoginInput) => this.request<UsersAuthResponse>('POST', `/api/users/mfa/login`, data),
+      mfaDisable: (data: UsersMfaVerifyInput) => this.request<unknown>('POST', `/api/users/mfa/disable`, data),
     };
   }
 
   get auth(): ReturnType<typeof this._init_auth> {
-    if (!this._cache["auth"]) {
-      this._cache["auth"] = this._init_auth();
+    if (!this._cache['auth']) {
+      this._cache['auth'] = this._init_auth();
     }
-    return this._cache["auth"];
+    return this._cache['auth'];
   }
 
   private _init_uploads() {
     return {
-      get: (filename: string) => this.request<unknown>("GET", `/api/uploads/${filename}`),
-      post: (data?: FormData | Record<string, unknown>) =>
-        this.request<UploadedFile>("POST", `/api/uploads`, data),
+      get: (filename: string) => this.request<unknown>('GET', `/api/uploads/${filename}`),
+      post: (data?: FormData | Record<string, unknown>) => this.request<UploadedFile>('POST', `/api/uploads`, data),
       stream: {
-        postStream: (data?: unknown) =>
-          this.request<UploadedFile>("POST", `/api/uploads/stream`, data),
-        post: (data?: unknown) => this.request<UploadedFile>("POST", `/api/uploads/stream`, data),
+        postStream: (data?: unknown) => this.request<UploadedFile>('POST', `/api/uploads/stream`, data),
+        post: (data?: unknown) => this.request<UploadedFile>('POST', `/api/uploads/stream`, data),
       },
     };
   }
 
   get uploads(): ReturnType<typeof this._init_uploads> {
-    if (!this._cache["uploads"]) {
-      this._cache["uploads"] = this._init_uploads();
+    if (!this._cache['uploads']) {
+      this._cache['uploads'] = this._init_uploads();
     }
-    return this._cache["uploads"];
+    return this._cache['uploads'];
   }
 
   private _init_health() {
     return {
-      get: () => this.request<HealthResponse>("GET", `/api/health`),
+      get: () => this.request<HealthResponse>('GET', `/api/health`),
     };
   }
 
   get health(): ReturnType<typeof this._init_health> {
-    if (!this._cache["health"]) {
-      this._cache["health"] = this._init_health();
+    if (!this._cache['health']) {
+      this._cache['health'] = this._init_health();
     }
-    return this._cache["health"];
+    return this._cache['health'];
   }
 
   private _init_monitor() {
     return {
       events: {
-        getEvents: () => this.request<unknown>("GET", `/api/monitor/events`),
-        get: () => this.request<unknown>("GET", `/api/monitor/events`),
+        getEvents: () => this.request<unknown>('GET', `/api/monitor/events`),
+        get: () => this.request<unknown>('GET', `/api/monitor/events`),
       },
       metrics: {
-        getMetrics: () => this.request<unknown>("GET", `/api/monitor/metrics`),
-        get: () => this.request<unknown>("GET", `/api/monitor/metrics`),
+        getMetrics: () => this.request<unknown>('GET', `/api/monitor/metrics`),
+        get: () => this.request<unknown>('GET', `/api/monitor/metrics`),
         prometheus: {
-          getPrometheus: () => this.request<unknown>("GET", `/api/monitor/metrics/prometheus`),
-          get: () => this.request<unknown>("GET", `/api/monitor/metrics/prometheus`),
+          getPrometheus: () => this.request<unknown>('GET', `/api/monitor/metrics/prometheus`),
+          get: () => this.request<unknown>('GET', `/api/monitor/metrics/prometheus`),
         },
       },
       ready: {
-        getReady: () => this.request<unknown>("GET", `/api/monitor/ready`),
-        get: () => this.request<unknown>("GET", `/api/monitor/ready`),
+        getReady: () => this.request<unknown>('GET', `/api/monitor/ready`),
+        get: () => this.request<unknown>('GET', `/api/monitor/ready`),
       },
       stream: {
-        getStream: () => this.request<unknown>("GET", `/api/monitor/stream`),
-        get: () => this.request<unknown>("GET", `/api/monitor/stream`),
+        getStream: () => this.request<unknown>('GET', `/api/monitor/stream`),
+        get: () => this.request<unknown>('GET', `/api/monitor/stream`),
       },
     };
   }
 
   get monitor(): ReturnType<typeof this._init_monitor> {
-    if (!this._cache["monitor"]) {
-      this._cache["monitor"] = this._init_monitor();
+    if (!this._cache['monitor']) {
+      this._cache['monitor'] = this._init_monitor();
     }
-    return this._cache["monitor"];
+    return this._cache['monitor'];
   }
 
   private _init_ready() {
     return {
-      get: () => this.request<unknown>("GET", `/ready`),
+      get: () => this.request<unknown>('GET', `/ready`),
     };
   }
 
   get ready(): ReturnType<typeof this._init_ready> {
-    if (!this._cache["ready"]) {
-      this._cache["ready"] = this._init_ready();
+    if (!this._cache['ready']) {
+      this._cache['ready'] = this._init_ready();
     }
-    return this._cache["ready"];
+    return this._cache['ready'];
   }
 
   private _init_audit() {
     return {
       export: {
-        getExport: () => this.request<unknown>("GET", `/api/audit/export`),
-        get: () => this.request<unknown>("GET", `/api/audit/export`),
+        getExport: () => this.request<unknown>('GET', `/api/audit/export`),
+        get: () => this.request<unknown>('GET', `/api/audit/export`),
       },
     };
   }
 
   get audit(): ReturnType<typeof this._init_audit> {
-    if (!this._cache["audit"]) {
-      this._cache["audit"] = this._init_audit();
+    if (!this._cache['audit']) {
+      this._cache['audit'] = this._init_audit();
     }
-    return this._cache["audit"];
+    return this._cache['audit'];
   }
 
   private _init_cequreMedia() {
     return {
-      get: () => this.request<unknown>("GET", `/api/cequre_media`),
+      get: () => this.request<unknown>('GET', `/api/cequre_media`),
       byId: (id: string) => ({
-        get: () => this.request<unknown>("GET", `/api/cequre_media/${id}`),
-        delete: () => this.request<unknown>("DELETE", `/api/cequre_media/${id}`),
+        get: () => this.request<unknown>('GET', `/api/cequre_media/${id}`),
+        delete: () => this.request<unknown>('DELETE', `/api/cequre_media/${id}`),
         usage: {
-          getUsage: () => this.request<unknown>("GET", `/api/cequre_media/${id}/usage`),
-          get: () => this.request<unknown>("GET", `/api/cequre_media/${id}/usage`),
+          getUsage: () => this.request<unknown>('GET', `/api/cequre_media/${id}/usage`),
+          get: () => this.request<unknown>('GET', `/api/cequre_media/${id}/usage`),
         },
-      }),
+      })
     };
   }
 
   get cequreMedia(): ReturnType<typeof this._init_cequreMedia> {
-    if (!this._cache["cequreMedia"]) {
-      this._cache["cequreMedia"] = this._init_cequreMedia();
+    if (!this._cache['cequreMedia']) {
+      this._cache['cequreMedia'] = this._init_cequreMedia();
     }
-    return this._cache["cequreMedia"];
+    return this._cache['cequreMedia'];
   }
 
   private _init_admin() {
     return {
-      get: () => this.request<unknown>("GET", `/admin`),
+      get: () => this.request<unknown>('GET', `/admin`),
       wildcard: {
-        getWildcard: () => this.request<unknown>("GET", `/admin/*`),
-        get: () => this.request<unknown>("GET", `/admin/*`),
+        getWildcard: () => this.request<unknown>('GET', `/admin/*`),
+        get: () => this.request<unknown>('GET', `/admin/*`),
       },
     };
   }
 
   get admin(): ReturnType<typeof this._init_admin> {
-    if (!this._cache["admin"]) {
-      this._cache["admin"] = this._init_admin();
+    if (!this._cache['admin']) {
+      this._cache['admin'] = this._init_admin();
     }
-    return this._cache["admin"];
+    return this._cache['admin'];
   }
+
+
 }
 
 /**
@@ -2640,43 +2405,42 @@ export function createCequreClient(config: CequreClientConfig = {}) {
 }
 
 export class CequreRealtimeClient extends CequreRealtimeCore {
+
   private _cache: Record<string, any> = {};
 
   private _init_realtime_users() {
     return {
       query: async (params?: { query?: UsersQueryInput; depth?: number }): Promise<Users[]> => {
-        return this.queryCollection<Users>("users", params);
+        return this.queryCollection<Users>('users', params);
       },
       subscribe: (
         params: { query?: UsersQueryInput; depth?: number } | undefined,
-        callback: (data: Users[]) => void,
+        callback: (data: Users[]) => void
       ): (() => void) => {
-        return this.subscribeCollection<Users>("users", params, callback);
+        return this.subscribeCollection<Users>('users', params, callback);
       },
       mutate: {
         create: async (data: UsersCreateInput): Promise<Users> => {
-          return this.mutateCreate<Users, UsersCreateInput>("users", data, () =>
-            (this.client as any).users.post(data),
-          );
+          return this.mutateCreate<Users, UsersCreateInput>('users', data, () => (this.client as any).users.post(data));
         },
         patch: async (id: string, data: UsersUpdateInput): Promise<Users> => {
-          return this.mutatePatch<Users, UsersUpdateInput>("users", id, data, () =>
-            (this.client as any).users.patch(id, data),
-          );
+          return this.mutatePatch<Users, UsersUpdateInput>('users', id, data, () => (this.client as any).users.patch(id, data));
         },
         delete: async (id: string): Promise<void> => {
-          return this.mutateDelete("users", id, () => (this.client as any).users.delete(id));
+          return this.mutateDelete('users', id, () => (this.client as any).users.delete(id));
         },
-      },
+      }
     };
   }
 
   get users(): ReturnType<typeof this._init_realtime_users> {
-    if (!this._cache["users"]) {
-      this._cache["users"] = this._init_realtime_users();
+    if (!this._cache['users']) {
+      this._cache['users'] = this._init_realtime_users();
     }
-    return this._cache["users"];
+    return this._cache['users'];
   }
+
+
 }
 
 /**

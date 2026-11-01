@@ -8,6 +8,7 @@ const loader = async () => {
   "use server";
 
   const res = await sdkClient().health.get();
+  console.log(res.data);
   return res.data;
 };
 

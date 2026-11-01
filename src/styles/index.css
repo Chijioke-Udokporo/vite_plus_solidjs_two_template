@@ -155,7 +155,10 @@ button {
 .toast-wrapper {
   display: grid;
   grid-template-rows: 1fr;
-  transition: grid-template-rows 250ms cubic-bezier(0.16, 1, 0.3, 1), margin 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease-out;
+  transition:
+    grid-template-rows 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    margin 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 250ms ease-out;
   width: 100%;
 }
 
