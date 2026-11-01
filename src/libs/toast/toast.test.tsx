@@ -115,8 +115,8 @@ describe("Custom Toast System", () => {
       expect(toasts()).toHaveLength(1);
       expect(toasts()[0].isDismissing).toBe(true);
 
-      // Exit animation finishes at 200ms
-      vi.advanceTimersByTime(200);
+      // Exit animation finishes at 250ms
+      vi.advanceTimersByTime(250);
       flush();
       expect(toasts()).toHaveLength(0);
     });
@@ -147,7 +147,7 @@ describe("Custom Toast System", () => {
       flush();
       expect(toasts()[0].isDismissing).toBe(true);
 
-      vi.advanceTimersByTime(200);
+      vi.advanceTimersByTime(250);
       flush();
       expect(toasts()).toHaveLength(0);
     });
@@ -343,7 +343,7 @@ describe("Custom Toast System", () => {
       });
       flush();
 
-      const toastEl = document.querySelector(`[data-toast-id="${id}"]`);
+      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`);
       expect(toastEl?.className).toContain("animate__bounceIn");
 
       toast.dismiss(id);
@@ -359,7 +359,7 @@ describe("Custom Toast System", () => {
       });
       flush();
 
-      const toastEl = document.querySelector(`[data-toast-id="${id}"]`);
+      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`);
       expect(toastEl).not.toBeNull();
       expect(toastEl?.className).toContain("hover:-translate-y-0.5");
       expect(toastEl?.className).toContain("active:scale-[0.99]");
@@ -381,7 +381,7 @@ describe("Custom Toast System", () => {
       const id = toast("Swipe Me", { dismissible: true });
       flush();
 
-      const toastEl = document.querySelector(`[data-toast-id="${id}"]`) as HTMLElement;
+      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`) as HTMLElement;
       expect(toastEl).not.toBeNull();
 
       // Simulate swipe right past 70px threshold
@@ -400,7 +400,7 @@ describe("Custom Toast System", () => {
       const id = toast("Subtle Tap", { dismissible: true });
       flush();
 
-      const toastEl = document.querySelector(`[data-toast-id="${id}"]`) as HTMLElement;
+      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`) as HTMLElement;
       expect(toastEl).not.toBeNull();
 
       // Simulate minor swipe of 20px
@@ -418,7 +418,7 @@ describe("Custom Toast System", () => {
       const id = toast("No Swipe", { dismissible: true, swipeable: false });
       flush();
 
-      const toastEl = document.querySelector(`[data-toast-id="${id}"]`) as HTMLElement;
+      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`) as HTMLElement;
       expect(toastEl).not.toBeNull();
 
       fireEvent.pointerDown(toastEl, { clientX: 100, button: 0 });
@@ -436,8 +436,8 @@ describe("Custom Toast System", () => {
       const id2 = toast("New Toast");
       flush();
 
-      const oldEl = document.querySelector(`[data-toast-id="${id1}"]`) as HTMLElement;
-      const newEl = document.querySelector(`[data-toast-id="${id2}"]`) as HTMLElement;
+      const oldEl = document.querySelector(`.alert[data-toast-id="${id1}"]`) as HTMLElement;
+      const newEl = document.querySelector(`.alert[data-toast-id="${id2}"]`) as HTMLElement;
 
       expect(oldEl).not.toBeNull();
       expect(newEl).not.toBeNull();
