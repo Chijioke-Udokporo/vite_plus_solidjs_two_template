@@ -14,6 +14,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
+      "@*": ["./src/*"],
       "cequre": ["./cequre"],
       "cequre-ts": ["./cequre/_generated/runtime/cequre"],
       "cequre-ts/testing": ["./cequre/_generated/runtime/testing"]

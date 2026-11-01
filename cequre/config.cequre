@@ -1,5 +1,9 @@
 config {
 	output: "_generated";
+	migrate {
+		dropOrphan: true;
+		alterColumns: true;
+	}
 	core: {
 		api: {
 			prefix: "/api";

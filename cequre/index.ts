@@ -4,13 +4,12 @@ import { routesModule } from "./routes";
 
 export const app = createCequre({
   adapter: new SQLiteAdapter(process.env.DATABASE_URL!),
-  plugins: [defaultSecurity(), defaultMonitoring()]
-})
-  .use(routesModule);
+  plugins: [defaultSecurity(), defaultMonitoring()],
+}).use(routesModule);
 
 if (process.env.CEQURE_CLI_GENERATE) {
   await app.init();
 } else if (import.meta.main && process.env.NODE_ENV !== "test") {
-  const port = process.env.PORT === "any" ? 0 : (Number(process.env.PORT) || 3000);
+  const port = process.env.PORT === "any" ? 0 : Number(process.env.PORT) || 4080;
   app.start({ port }).catch(console.error);
 }

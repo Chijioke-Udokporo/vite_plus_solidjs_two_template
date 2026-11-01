@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "cequre client ./cequre/index.ts -o src/libs/sdk/client.ts",
     "build": "tsc && vp build",
     "dev": "cequre dev --app vp dev",
     "preview": "vp preview"
@@ -39,8 +40,8 @@
   "devEngines": {
     "packageManager": {
       "name": "bun",
-      "onFail": "download",
-      "version": "1.4.4"
+      "version": "1.4.4",
+      "onFail": "download"
     }
   }
 }
