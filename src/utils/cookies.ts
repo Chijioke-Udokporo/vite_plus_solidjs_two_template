@@ -20,10 +20,7 @@ export class AppCookieManager {
 
   private static async AppendEvent(args: { payload: string; maxAge?: number }) {
     const { payload, maxAge = 1000 * 60 * 60 } = args;
-
     const cookie = await cookieInit.serialize(payload, { maxAge });
-    const event = this.GetEvent();
-    event?.response.headers.append("Set-Cookie", cookie);
     return cookie;
   }
 
