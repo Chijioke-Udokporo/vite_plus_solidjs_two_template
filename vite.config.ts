@@ -32,4 +32,8 @@ export default defineConfig({
   server: {
     port: 4090,
   },
+  test: {
+    environment: "happy-dom",
+    exclude: ["**/node_modules/**", "**/dist/**", "**/tests/**", "**/_tests/**"],
+  },
 });

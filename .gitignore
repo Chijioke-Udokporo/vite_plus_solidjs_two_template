@@ -26,6 +26,7 @@ dist-ssr
 !.vscode/settings.json
 !.vscode/extensions.json
 .cequre
+.vercel
 temp/
 
 uploads/

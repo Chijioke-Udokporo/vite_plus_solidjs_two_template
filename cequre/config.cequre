@@ -8,6 +8,10 @@ config {
 		api: {
 			prefix: "/api";
 		}
+		graphql {
+			enabled: true;
+			path: "/graphql";
+		}
 	}
 	security: {
 		cors: {

@@ -1,12 +1,6 @@
 import type { Element as JSXElement } from "solid-js";
 
-export type ToastType =
-  | "default"
-  | "success"
-  | "error"
-  | "info"
-  | "warning"
-  | "loading";
+export type ToastType = "default" | "success" | "error" | "info" | "warning" | "loading";
 
 export type ToastPosition =
   | "top-left"
@@ -21,12 +15,19 @@ export interface ToastAction {
   onClick: (toast: Toast) => void;
 }
 
+export interface ToastAnimationOptions {
+  enter?: string;
+  exit?: string;
+}
+
 export interface ToastOptions {
   id?: string;
   description?: JSXElement | string;
   type?: ToastType;
   duration?: number;
   dismissible?: boolean;
+  swipeable?: boolean;
+  animation?: ToastAnimationOptions;
   action?: ToastAction;
   onDismiss?: (toast: Toast) => void;
 }
@@ -38,6 +39,8 @@ export interface Toast {
   type: ToastType;
   duration: number;
   dismissible: boolean;
+  swipeable?: boolean;
+  animation?: ToastAnimationOptions;
   action?: ToastAction;
   onDismiss?: (toast: Toast) => void;
   createdAt: number;
@@ -63,4 +66,6 @@ export interface ToasterProps {
   duration?: number;
   maxToasts?: number;
   class?: string;
+  stacked?: boolean;
+  expand?: boolean;
 }

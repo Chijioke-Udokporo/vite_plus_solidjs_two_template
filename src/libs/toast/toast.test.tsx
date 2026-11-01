@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render } from "@solidjs/testing-library";
 import { flush } from "solid-js";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { toast, toasts } from "./toast-store";
 import { Toaster } from "./Toaster";
 
@@ -242,7 +242,8 @@ describe("Custom Toast System", () => {
       // Should be in slide-out dismissing state
       const toastEl = document.querySelector(`[data-toast-id="${id}"]`);
       expect(toastEl).not.toBeNull();
-      expect(toastEl?.className).toContain("animate-toast-slide-out-right");
+      expect(toastEl?.className).toContain("animate__animated");
+      expect(toastEl?.className).toContain("animate__fadeOutRight");
       expect(toastEl?.getAttribute("data-toast-dismissing")).toBe("true");
 
       vi.advanceTimersByTime(200);
@@ -265,18 +266,19 @@ describe("Custom Toast System", () => {
       expect(renderedToasts[1].textContent).toContain("Third");
     });
 
-    it("applies directional slide-in and slide-out animation classes", () => {
+    it("applies directional slide-in and slide-out animation classes using animate.css", () => {
       const { unmount: unmountRight } = render(() => <Toaster position="top-right" />);
       const id1 = toast("Right Toast");
       flush();
 
       const rightToast = document.querySelector(`[data-toast-id="${id1}"]`);
-      expect(rightToast?.className).toContain("animate-toast-slide-in-right");
+      expect(rightToast?.className).toContain("animate__animated");
+      expect(rightToast?.className).toContain("animate__fadeInRight");
       expect(rightToast?.className).toContain("hover:scale-[1.01]");
 
       toast.dismiss(id1);
       flush();
-      expect(rightToast?.className).toContain("animate-toast-slide-out-right");
+      expect(rightToast?.className).toContain("animate__fadeOutRight");
 
       unmountRight();
       toast.clear();
@@ -287,11 +289,11 @@ describe("Custom Toast System", () => {
       flush();
 
       const leftToast = document.querySelector(`[data-toast-id="${id2}"]`);
-      expect(leftToast?.className).toContain("animate-toast-slide-in-left");
+      expect(leftToast?.className).toContain("animate__fadeInLeft");
 
       toast.dismiss(id2);
       flush();
-      expect(leftToast?.className).toContain("animate-toast-slide-out-left");
+      expect(leftToast?.className).toContain("animate__fadeOutLeft");
 
       unmountLeft();
       toast.clear();
@@ -302,11 +304,126 @@ describe("Custom Toast System", () => {
       flush();
 
       const bottomToast = document.querySelector(`[data-toast-id="${id3}"]`);
-      expect(bottomToast?.className).toContain("animate-toast-slide-in-bottom");
+      expect(bottomToast?.className).toContain("animate__fadeInUp");
 
       toast.dismiss(id3);
       flush();
-      expect(bottomToast?.className).toContain("animate-toast-slide-out-bottom");
+      expect(bottomToast?.className).toContain("animate__fadeOutDown");
+    });
+
+    it("supports custom Animate.style animation overrides", () => {
+      render(() => <Toaster position="top-right" />);
+      const id = toast("Bouncy Toast", {
+        animation: { enter: "animate__bounceIn", exit: "animate__bounceOut" },
+      });
+      flush();
+
+      const toastEl = document.querySelector(`[data-toast-id="${id}"]`);
+      expect(toastEl?.className).toContain("animate__bounceIn");
+
+      toast.dismiss(id);
+      flush();
+      expect(toastEl?.className).toContain("animate__bounceOut");
+    });
+
+    it("renders micro-interaction transform classes for icons, buttons, and close affordance", () => {
+      render(() => <Toaster position="top-right" />);
+      const id = toast("Transform Test", {
+        dismissible: true,
+        action: { label: "Retry", onClick: () => {} },
+      });
+      flush();
+
+      const toastEl = document.querySelector(`[data-toast-id="${id}"]`);
+      expect(toastEl).not.toBeNull();
+      expect(toastEl?.className).toContain("hover:-translate-y-0.5");
+      expect(toastEl?.className).toContain("active:scale-[0.99]");
+
+      const iconWrapper = toastEl?.querySelector(".animate-toast-icon-pop");
+      expect(iconWrapper).not.toBeNull();
+
+      const actionBtn = toastEl?.querySelector("button.btn-outline");
+      expect(actionBtn?.className).toContain("hover:scale-105");
+      expect(actionBtn?.className).toContain("active:scale-95");
+
+      const closeBtn = toastEl?.querySelector("button[aria-label='Close notification']");
+      expect(closeBtn?.className).toContain("hover:rotate-90");
+      expect(closeBtn?.className).toContain("hover:scale-110");
+    });
+
+    it("dismisses toast via horizontal swipe gesture when exceeding threshold", () => {
+      render(() => <Toaster position="top-right" />);
+      const id = toast("Swipe Me", { dismissible: true });
+      flush();
+
+      const toastEl = document.querySelector(`[data-toast-id="${id}"]`) as HTMLElement;
+      expect(toastEl).not.toBeNull();
+
+      // Simulate swipe right past 70px threshold
+      fireEvent.pointerDown(toastEl, { clientX: 100, button: 0 });
+      fireEvent.pointerMove(toastEl, { clientX: 190 });
+      fireEvent.pointerUp(toastEl, { clientX: 190 });
+      flush();
+
+      // Toast starts dismissing
+      expect(toasts()[0]?.isDismissing).toBe(true);
+      expect(toastEl.getAttribute("data-toast-dismissing")).toBe("true");
+    });
+
+    it("does not dismiss toast when swipe distance is below threshold", () => {
+      render(() => <Toaster position="top-right" />);
+      const id = toast("Subtle Tap", { dismissible: true });
+      flush();
+
+      const toastEl = document.querySelector(`[data-toast-id="${id}"]`) as HTMLElement;
+      expect(toastEl).not.toBeNull();
+
+      // Simulate minor swipe of 20px
+      fireEvent.pointerDown(toastEl, { clientX: 100, button: 0 });
+      fireEvent.pointerMove(toastEl, { clientX: 120 });
+      fireEvent.pointerUp(toastEl, { clientX: 120 });
+      flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].isDismissing).toBe(false);
+    });
+
+    it("ignores swipe gestures when swipeable is set to false", () => {
+      render(() => <Toaster position="top-right" />);
+      const id = toast("No Swipe", { dismissible: true, swipeable: false });
+      flush();
+
+      const toastEl = document.querySelector(`[data-toast-id="${id}"]`) as HTMLElement;
+      expect(toastEl).not.toBeNull();
+
+      fireEvent.pointerDown(toastEl, { clientX: 100, button: 0 });
+      fireEvent.pointerMove(toastEl, { clientX: 300 });
+      fireEvent.pointerUp(toastEl, { clientX: 300 });
+      flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].isDismissing).toBe(false);
+    });
+
+    it("applies stack 3D depth transforms when stacked mode is active", () => {
+      render(() => <Toaster position="top-right" stacked={true} />);
+      const id1 = toast("Old Toast");
+      const id2 = toast("New Toast");
+      flush();
+
+      const oldEl = document.querySelector(`[data-toast-id="${id1}"]`) as HTMLElement;
+      const newEl = document.querySelector(`[data-toast-id="${id2}"]`) as HTMLElement;
+
+      expect(oldEl).not.toBeNull();
+      expect(newEl).not.toBeNull();
+
+      // Top toast (newEl) has stackIndex 0 -> translateY(0), scale(1)
+      expect(newEl.style.transform).toContain("translate3d(0, 0px, 0)");
+      expect(newEl.style.transform).toContain("scale(1)");
+
+      // Older toast (oldEl) has stackIndex 1 -> translateY(10px), scale(0.95)
+      expect(oldEl.style.transform).toContain("translate3d(0, 10px, 0)");
+      expect(oldEl.style.transform).toContain("scale(0.95)");
     });
   });
 });

@@ -1,11 +1,5 @@
 import { createSignal, type Element as JSXElement } from "solid-js";
-import type {
-  DismissOptions,
-  PromiseToastOptions,
-  Toast,
-  ToastOptions,
-  ToastType,
-} from "./types";
+import type { DismissOptions, PromiseToastOptions, Toast, ToastOptions, ToastType } from "./types";
 
 const DEFAULT_DURATION = 4000;
 let idCounter = 0;
@@ -80,7 +74,7 @@ export function dismiss(id?: string, options?: DismissOptions): void {
         return { ...t, isDismissing: true };
       }
       return t;
-    })
+    }),
   );
 
   if (!found) return;
@@ -115,8 +109,8 @@ export function pause(id: string): void {
             isPaused: true,
             pausedAt: Date.now(),
           }
-        : t
-    )
+        : t,
+    ),
   );
 }
 
@@ -133,26 +127,24 @@ export function resume(id: string): void {
             isPaused: false,
             pausedAt: undefined,
           }
-        : t
-    )
+        : t,
+    ),
   );
 
   scheduleDismiss(id, target.remainingMs);
 }
 
-export function notify(
-  title: JSXElement | string,
-  options?: ToastOptions
-): string {
+export function notify(title: JSXElement | string, options?: ToastOptions): string {
   const id = options?.id ?? generateId();
   const type: ToastType = options?.type ?? "default";
   const duration =
     options?.duration !== undefined
       ? options.duration
       : type === "loading"
-      ? Infinity
-      : DEFAULT_DURATION;
+        ? Infinity
+        : DEFAULT_DURATION;
   const dismissible = options?.dismissible ?? true;
+  const swipeable = options?.swipeable ?? true;
 
   const toastItem: Toast = {
     id,
@@ -161,6 +153,8 @@ export function notify(
     type,
     duration,
     dismissible,
+    swipeable,
+    animation: options?.animation,
     action: options?.action,
     onDismiss: options?.onDismiss,
     createdAt: Date.now(),
@@ -185,45 +179,27 @@ export function notify(
 
 export const show = notify;
 
-export function success(
-  title: JSXElement | string,
-  options?: Omit<ToastOptions, "type">
-): string {
+export function success(title: JSXElement | string, options?: Omit<ToastOptions, "type">): string {
   return notify(title, { ...options, type: "success" });
 }
 
-export function error(
-  title: JSXElement | string,
-  options?: Omit<ToastOptions, "type">
-): string {
+export function error(title: JSXElement | string, options?: Omit<ToastOptions, "type">): string {
   return notify(title, { ...options, type: "error" });
 }
 
-export function info(
-  title: JSXElement | string,
-  options?: Omit<ToastOptions, "type">
-): string {
+export function info(title: JSXElement | string, options?: Omit<ToastOptions, "type">): string {
   return notify(title, { ...options, type: "info" });
 }
 
-export function warning(
-  title: JSXElement | string,
-  options?: Omit<ToastOptions, "type">
-): string {
+export function warning(title: JSXElement | string, options?: Omit<ToastOptions, "type">): string {
   return notify(title, { ...options, type: "warning" });
 }
 
-export function loading(
-  title: JSXElement | string,
-  options?: Omit<ToastOptions, "type">
-): string {
+export function loading(title: JSXElement | string, options?: Omit<ToastOptions, "type">): string {
   return notify(title, { ...options, type: "loading" });
 }
 
-export function promise<T>(
-  p: Promise<T>,
-  options: PromiseToastOptions<T>
-): Promise<T> {
+export function promise<T>(p: Promise<T>, options: PromiseToastOptions<T>): Promise<T> {
   const id = loading(options.loading, {
     duration: Infinity,
     dismissible: false,
@@ -232,9 +208,7 @@ export function promise<T>(
   return p
     .then((data) => {
       const successTitle =
-        typeof options.success === "function"
-          ? options.success(data)
-          : options.success;
+        typeof options.success === "function" ? options.success(data) : options.success;
       success(successTitle, {
         id,
         duration: options.duration ?? DEFAULT_DURATION,
@@ -243,10 +217,7 @@ export function promise<T>(
       return data;
     })
     .catch((err: unknown) => {
-      const errorTitle =
-        typeof options.error === "function"
-          ? options.error(err)
-          : options.error;
+      const errorTitle = typeof options.error === "function" ? options.error(err) : options.error;
       error(errorTitle, {
         id,
         duration: options.duration ?? DEFAULT_DURATION,
@@ -260,10 +231,7 @@ export function clear(): void {
   dismiss();
 }
 
-export function toast(
-  title: JSXElement | string,
-  options?: ToastOptions
-): string {
+export function toast(title: JSXElement | string, options?: ToastOptions): string {
   return notify(title, options);
 }
 

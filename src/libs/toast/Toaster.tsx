@@ -1,5 +1,5 @@
 import type { Element as JSXElement } from "solid-js";
-import { For } from "solid-js";
+import { For, createSignal } from "solid-js";
 import { Portal } from "@solidjs/web";
 import { toasts } from "./toast-store";
 import { ToastItem } from "./ToastItem";
@@ -25,7 +25,12 @@ function getPositionClasses(pos: ToastPosition = "top-right"): string {
 }
 
 export function Toaster(props: ToasterProps = {}): JSXElement {
+  const [isHovered, setIsHovered] = createSignal(false);
+
   const position = () => props.position ?? "top-right";
+  const isStacked = () => props.stacked ?? false;
+  const isExpanded = () => (props.expand ?? false) || isHovered();
+
   const items = () => {
     const list = toasts();
     if (props.maxToasts && props.maxToasts > 0) {
@@ -39,14 +44,32 @@ export function Toaster(props: ToasterProps = {}): JSXElement {
       <div
         aria-label="Notifications"
         class={[
-          "fixed z-50 pointer-events-none flex flex-col gap-2.5 w-full max-w-sm px-4 sm:px-0",
+          "fixed z-50 pointer-events-none flex flex-col w-full max-w-sm px-4 sm:px-0 transition-all duration-300",
+          isStacked() && !isExpanded() ? "gap-0" : "gap-2.5",
           getPositionClasses(position()),
           props.class,
         ]}
+        onMouseEnter={() => {
+          if (isStacked()) setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          if (isStacked()) setIsHovered(false);
+        }}
         role="region"
       >
         <For each={items()} keyed={(t) => t.id}>
-          {(item) => <ToastItem position={position()} toast={item} />}
+          {(item, index) => {
+            const stackIndex = () => items().length - 1 - index();
+            return (
+              <ToastItem
+                isExpanded={isExpanded()}
+                isStacked={isStacked()}
+                position={position()}
+                stackIndex={stackIndex()}
+                toast={item}
+              />
+            );
+          }}
         </For>
       </div>
     </Portal>

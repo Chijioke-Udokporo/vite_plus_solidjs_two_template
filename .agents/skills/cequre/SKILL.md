@@ -102,8 +102,13 @@ import { createCequreTest } from "cequre-ts/testing";
 import { app } from "../cequre/index";
 
 const cequre = createCequreTest(app);
-beforeAll(async () => { await app.init(); });
-afterAll(async () => { app.retire(); await app.adapter.disconnect(); });
+beforeAll(async () => {
+  await app.init();
+});
+afterAll(async () => {
+  app.retire();
+  await app.adapter.disconnect();
+});
 
 test("greeting route returns its declared response", async () => {
   const response = await cequre.routes.get("/greeting");
