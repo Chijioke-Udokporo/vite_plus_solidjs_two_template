@@ -30,6 +30,7 @@ export interface ToastOptions {
   animation?: ToastAnimationOptions;
   action?: ToastAction;
   onDismiss?: (toast: Toast) => void;
+  duplicate?: boolean;
 }
 
 export interface Toast {

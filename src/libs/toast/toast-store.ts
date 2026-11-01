@@ -14,6 +14,7 @@ const [toasts, setToasts] = createSignal<readonly Toast[]>([], {
 
 const timerMap = new Map<string, ReturnType<typeof setTimeout>>();
 const startTimes = new Map<string, number>();
+const activeToastIds = new Set<string>();
 
 function clearTimer(id: string): void {
   const timer = timerMap.get(id);
@@ -48,6 +49,7 @@ export function dismiss(id?: string, options?: DismissOptions): void {
       clearTimer(item.id);
       item.onDismiss?.(item);
     }
+    activeToastIds.clear();
     setToasts([]);
     return;
   }
@@ -55,6 +57,7 @@ export function dismiss(id?: string, options?: DismissOptions): void {
   clearTimer(id);
 
   if (immediate) {
+    activeToastIds.delete(id);
     setToasts((prev) => {
       const target = prev.find((t) => t.id === id);
       if (target) {
@@ -80,6 +83,7 @@ export function dismiss(id?: string, options?: DismissOptions): void {
   if (!found) return;
 
   const exitTimer = setTimeout(() => {
+    activeToastIds.delete(id);
     setToasts((prev) => prev.filter((t) => t.id !== id));
     timerMap.delete(`exit-${id}`);
   }, 250);
@@ -135,7 +139,6 @@ export function resume(id: string): void {
 }
 
 export function notify(title: JSXElement | string, options?: ToastOptions): string {
-  const id = options?.id ?? generateId();
   const type: ToastType = options?.type ?? "default";
   const duration =
     options?.duration !== undefined
@@ -145,6 +148,23 @@ export function notify(title: JSXElement | string, options?: ToastOptions): stri
         : DEFAULT_DURATION;
   const dismissible = options?.dismissible ?? true;
   const swipeable = options?.swipeable ?? true;
+
+  let id: string;
+  const allowDuplicate = options?.duplicate ?? false;
+
+  if (options?.id) {
+    if (allowDuplicate) {
+      const existing = activeToastIds.has(options.id);
+      id = existing ? `${options.id}-${++idCounter}` : options.id;
+    } else {
+      id = options.id;
+    }
+  } else {
+    id = generateId();
+  }
+
+  activeToastIds.add(id);
+  clearTimer(id);
 
   const toastItem: Toast = {
     id,

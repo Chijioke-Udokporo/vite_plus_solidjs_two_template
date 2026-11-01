@@ -143,13 +143,69 @@ button {
   background: rgba(156, 163, 175, 0.65);
 }
 
-/* Toast Animations (powered by animate.style / animate.css) */
-[data-toast-id] {
-  --animate-duration: 250ms;
+/* Toast Y-Axis Spring Animations (Solid-Toast / React-Hot-Toast physics) */
+@keyframes toast-enter-top {
+  from {
+    transform: translate3d(0, -180%, 0) scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
 }
 
-[data-toast-dismissing="true"] {
-  --animate-duration: 250ms;
+@keyframes toast-exit-top {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -150%, 0) scale(0.6);
+    opacity: 0;
+  }
+}
+
+@keyframes toast-enter-bottom {
+  from {
+    transform: translate3d(0, 180%, 0) scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-exit-bottom {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, 150%, 0) scale(0.6);
+    opacity: 0;
+  }
+}
+
+.animate-toast-enter-top {
+  animation: toast-enter-top 320ms cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-toast-exit-top {
+  animation: toast-exit-top 250ms cubic-bezier(0.06, 0.71, 0.55, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-toast-enter-bottom {
+  animation: toast-enter-bottom 320ms cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-toast-exit-bottom {
+  animation: toast-exit-bottom 250ms cubic-bezier(0.06, 0.71, 0.55, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .toast-wrapper {

@@ -23,7 +23,7 @@ export default function App() {
   const loaderData = createMemo(() => loader());
 
   action.onSettled(({ result }) => {
-    if (result?.error) toast.error(result?.error);
+    if (result?.error) toast.error(result?.error, { id: "error-login" });
   });
 
   return (

@@ -3,104 +3,197 @@ import { Show, createSignal } from "solid-js";
 import { toast } from "./toast-store";
 import type { Toast, ToastAnimationOptions, ToastPosition } from "./types";
 
-function ToastIcon(props: { type: Toast["type"] }): Element {
+function SuccessIcon(): Element {
   return (
-    <div class="animate-toast-icon-pop flex items-center justify-center shrink-0">
-      <Show
-        when={props.type !== "loading"}
-        fallback={<span class="loading loading-spinner loading-sm shrink-0" />}
+    <svg class="size-5 shrink-0 overflow-visible" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" fill="#10B981" r="0">
+        <animate
+          attributeName="opacity"
+          dur="0.35s"
+          fill="freeze"
+          keyTimes="0; 0.6; 1"
+          values="0; 1; 1"
+        />
+        <animate
+          attributeName="r"
+          dur="0.35s"
+          fill="freeze"
+          keyTimes="0; 0.6; 1"
+          values="0; 17.5; 16"
+        />
+      </circle>
+      <circle cx="16" cy="16" fill="#10B981" opacity="0" r="12">
+        <animate attributeName="opacity" begin="320ms" dur="1s" fill="freeze" values="1; 0" />
+        <animate attributeName="r" begin="320ms" dur="1s" fill="freeze" values="12; 26" />
+      </circle>
+      <path
+        d="M9.8,17.2l3.8,3.6c0.1,0.1,0.3,0.1,0.4,0l9.6-9.7"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-dasharray="22"
+        stroke-dashoffset="22"
+        stroke-linecap="round"
+        stroke-miterlimit="10"
+        stroke-width="3.5"
       >
-        <Show when={props.type === "success"}>
-          <svg
-            class="size-5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-        </Show>
-        <Show when={props.type === "error"}>
-          <svg
-            class="size-5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <line x1="15" x2="9" y1="9" y2="15" />
-            <line x1="9" x2="15" y1="9" y2="15" />
-          </svg>
-        </Show>
-        <Show when={props.type === "warning"}>
-          <svg
-            class="size-5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-            <line x1="12" x2="12" y1="9" y2="13" />
-            <line x1="12" x2="12.01" y1="17" y2="17" />
-          </svg>
-        </Show>
-        <Show when={props.type === "info"}>
-          <svg
-            class="size-5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" x2="12" y1="16" y2="12" />
-            <line x1="12" x2="12.01" y1="8" y2="8" />
-          </svg>
-        </Show>
-        <Show when={props.type === "default"}>
-          <svg
-            class="size-5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-        </Show>
-      </Show>
-    </div>
+        <animate
+          attributeName="stroke-dashoffset"
+          begin="250ms"
+          calcMode="spline"
+          dur="0.25s"
+          fill="freeze"
+          keySplines="0.0, 0.0, 0.58, 1.0"
+          keyTimes="0; 1"
+          values="22;0"
+        />
+      </path>
+    </svg>
   );
 }
 
-function getAlertClass(type: Toast["type"]): string {
-  switch (type) {
-    case "success":
-      return "alert-success";
-    case "error":
-      return "alert-error";
-    case "warning":
-      return "alert-warning";
-    case "info":
-      return "alert-info";
-    default:
-      return "alert-neutral bg-base-100 text-base-content border border-base-300";
-  }
+function ErrorIcon(): Element {
+  return (
+    <svg class="size-5 shrink-0 overflow-visible" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" fill="#EF4444" r="0">
+        <animate
+          attributeName="opacity"
+          dur="0.35s"
+          fill="freeze"
+          keyTimes="0; 0.6; 1"
+          values="0; 1; 1"
+        />
+        <animate
+          attributeName="r"
+          dur="0.35s"
+          fill="freeze"
+          keyTimes="0; 0.6; 1"
+          values="0; 17.5; 16"
+        />
+      </circle>
+      <circle cx="16" cy="16" fill="#EF4444" opacity="0" r="12">
+        <animate attributeName="opacity" begin="320ms" dur="1s" fill="freeze" values="1; 0" />
+        <animate attributeName="r" begin="320ms" dur="1s" fill="freeze" values="12; 26" />
+      </circle>
+      <path
+        d="M16,8l0,8"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-dasharray="9"
+        stroke-dashoffset="9"
+        stroke-linecap="round"
+        stroke-width="3.5"
+      >
+        <animate
+          attributeName="stroke-dashoffset"
+          begin="250ms"
+          calcMode="spline"
+          dur="0.2s"
+          fill="freeze"
+          keySplines="0.0, 0.0, 0.58, 1.0"
+          keyTimes="0; 1"
+          values="9;0"
+        />
+      </path>
+      <circle cx="16" cy="22.5" fill="#FFFFFF" opacity="0" r="2">
+        <animate
+          attributeName="opacity"
+          begin="350ms"
+          calcMode="spline"
+          dur="0.25s"
+          fill="freeze"
+          keySplines="0.0, 0.0, 0.58, 1.0"
+          keyTimes="0; 1"
+          values="0;1"
+        />
+      </circle>
+    </svg>
+  );
+}
+
+function LoaderIcon(): Element {
+  return (
+    <svg class="size-5 shrink-0 overflow-visible" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" fill="none" r="10" stroke="#E5E7EB" stroke-width="3.5" />
+      <path
+        d="M16,6c3,0,5.7,1.3,7.5,3.4c0.6,0.7,1.1,1.4,1.5,2.2"
+        fill="none"
+        stroke="#4B5563"
+        stroke-linecap="round"
+        stroke-width="3.5"
+      >
+        <animateTransform
+          attributeName="transform"
+          dur="0.75s"
+          from="0 16 16"
+          repeatCount="indefinite"
+          to="360 16 16"
+          type="rotate"
+        />
+      </path>
+    </svg>
+  );
+}
+
+function WarningIcon(): Element {
+  return (
+    <svg class="size-5 shrink-0 overflow-visible" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" fill="#F59E0B" r="16" />
+      <path d="M16,9l0,7" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-width="3.5" />
+      <circle cx="16" cy="22.5" fill="#FFFFFF" r="2" />
+    </svg>
+  );
+}
+
+function InfoIcon(): Element {
+  return (
+    <svg class="size-5 shrink-0 overflow-visible" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" fill="#3B82F6" r="16" />
+      <circle cx="16" cy="9.5" fill="#FFFFFF" r="2" />
+      <path d="M16,14l0,8" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-width="3.5" />
+    </svg>
+  );
+}
+
+function DefaultIcon(): Element {
+  return (
+    <svg
+      class="size-5 shrink-0 text-gray-500"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
+function ToastIcon(props: { type: Toast["type"] }): Element {
+  return (
+    <div class="flex items-center justify-center shrink-0">
+      <Show when={props.type === "success"}>
+        <SuccessIcon />
+      </Show>
+      <Show when={props.type === "error"}>
+        <ErrorIcon />
+      </Show>
+      <Show when={props.type === "loading"}>
+        <LoaderIcon />
+      </Show>
+      <Show when={props.type === "warning"}>
+        <WarningIcon />
+      </Show>
+      <Show when={props.type === "info"}>
+        <InfoIcon />
+      </Show>
+      <Show when={props.type === "default"}>
+        <DefaultIcon />
+      </Show>
+    </div>
+  );
 }
 
 function getSlideAnimationClass(
@@ -117,39 +210,11 @@ function getSlideAnimationClass(
     }
   }
 
-  if (position === "top-right") {
-    return isDismissing
-      ? "animate__animated animate__fadeOutTopRight"
-      : "animate__animated animate__fadeInTopRight";
+  const isTop = position.startsWith("top");
+  if (isTop) {
+    return isDismissing ? "animate-toast-exit-top" : "animate-toast-enter-top";
   }
-  if (position === "top-left") {
-    return isDismissing
-      ? "animate__animated animate__fadeOutTopLeft"
-      : "animate__animated animate__fadeInTopLeft";
-  }
-  if (position === "bottom-right") {
-    return isDismissing
-      ? "animate__animated animate__fadeOutBottomRight"
-      : "animate__animated animate__fadeInBottomRight";
-  }
-  if (position === "bottom-left") {
-    return isDismissing
-      ? "animate__animated animate__fadeOutBottomLeft"
-      : "animate__animated animate__fadeInBottomLeft";
-  }
-  if (position === "top-center") {
-    return isDismissing
-      ? "animate__animated animate__fadeOutUp"
-      : "animate__animated animate__fadeInDown";
-  }
-  if (position === "bottom-center") {
-    return isDismissing
-      ? "animate__animated animate__fadeOutDown"
-      : "animate__animated animate__fadeInUp";
-  }
-  return isDismissing
-    ? "animate__animated animate__fadeOutTopRight"
-    : "animate__animated animate__fadeInTopRight";
+  return isDismissing ? "animate-toast-exit-bottom" : "animate-toast-enter-bottom";
 }
 
 export interface ToastItemProps {
@@ -247,7 +312,7 @@ export function ToastItem(props: ToastItemProps): Element {
     if (props.isStacked && !props.isExpanded && typeof props.stackIndex === "number") {
       const idx = props.stackIndex;
       const isTop = (props.position ?? "top-right").startsWith("top");
-      const translateY = isTop ? idx * 10 : -idx * 10;
+      const translateY = isTop ? idx * 8 : -idx * 8;
       const scale = Math.max(0.85, 1 - idx * 0.05);
       const opacity = Math.max(0.4, 1 - idx * 0.15);
       return {
@@ -276,11 +341,11 @@ export function ToastItem(props: ToastItemProps): Element {
           aria-atomic="true"
           aria-live={isAssertive() ? "assertive" : "polite"}
           class={[
-            "alert shadow-lg pointer-events-auto flex items-start sm:items-center justify-between gap-3 text-sm py-3 px-4 rounded-xl",
-            "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl active:scale-[0.99]",
-            "backdrop-blur-md select-none",
+            "toast-card pointer-events-auto flex items-center justify-between gap-3 text-[14px] leading-tight py-2.5 px-3.5 rounded-lg max-w-[360px]",
+            "bg-white dark:bg-[#1d232a] text-[#363636] dark:text-[#f3f4f6]",
+            "shadow-[0_3px_10px_rgba(0,0,0,0.1),0_3px_3px_rgba(0,0,0,0.05)] border border-black/5 dark:border-white/10",
+            "transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]",
             animationClass(),
-            getAlertClass(currentToast().type),
           ]}
           data-toast-dismissing={currentToast().isDismissing ? "true" : undefined}
           data-toast-id={currentToast().id}
@@ -294,12 +359,14 @@ export function ToastItem(props: ToastItemProps): Element {
           role={isAssertive() ? "alert" : "status"}
           style={dynamicStyle()}
         >
-          <div class="flex items-center gap-3 min-w-0 flex-1">
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
             <ToastIcon type={currentToast().type} />
-            <div class="flex flex-col min-w-0">
-              <div class="font-medium leading-snug wrap-break-word">{currentToast().title}</div>
+            <div class="flex flex-col min-w-0 py-0.5">
+              <div class="font-normal text-[14px] leading-snug wrap-break-word">
+                {currentToast().title}
+              </div>
               <Show when={currentToast().description}>
-                <div class="text-xs opacity-80 mt-0.5 leading-normal wrap-break-word">
+                <div class="text-[12px] opacity-75 mt-0.5 leading-normal wrap-break-word">
                   {currentToast().description}
                 </div>
               </Show>
@@ -322,7 +389,7 @@ export function ToastItem(props: ToastItemProps): Element {
             <Show when={currentToast().dismissible}>
               <button
                 aria-label="Close notification"
-                class="btn btn-ghost btn-xs btn-circle opacity-70 hover:opacity-100 hover:bg-black/10 transition-all duration-150 hover:rotate-90 hover:scale-110 active:scale-90"
+                class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xs size-5 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                 onClick={() => toast.dismiss(currentToast().id)}
                 type="button"
               >

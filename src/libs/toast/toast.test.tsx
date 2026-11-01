@@ -240,10 +240,9 @@ describe("Custom Toast System", () => {
       }
 
       // Should be in slide-out dismissing state
-      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`);
+      const toastEl = document.querySelector(`.toast-card[data-toast-id="${id}"]`);
       expect(toastEl).not.toBeNull();
-      expect(toastEl?.className).toContain("animate__animated");
-      expect(toastEl?.className).toContain("animate__fadeOutTopRight");
+      expect(toastEl?.className).toContain("animate-toast-exit-top");
       expect(toastEl?.getAttribute("data-toast-dismissing")).toBe("true");
 
       const wrapperEl = document.querySelector(`.toast-wrapper[data-toast-id="${id}"]`);
@@ -263,25 +262,23 @@ describe("Custom Toast System", () => {
       toast("Third");
       flush();
 
-      const renderedToasts = document.querySelectorAll(".alert[data-toast-id]");
+      const renderedToasts = document.querySelectorAll(".toast-card[data-toast-id]");
       expect(renderedToasts).toHaveLength(2);
       expect(renderedToasts[0].textContent).toContain("Second");
       expect(renderedToasts[1].textContent).toContain("Third");
     });
 
-    it("applies directional slide-in and slide-out animation classes using animate.css", () => {
+    it("applies directional slide-in and slide-out animation classes along the Y-axis", () => {
       const { unmount: unmountRight } = render(() => <Toaster position="top-right" />);
       const id1 = toast("Right Toast");
       flush();
 
-      const rightToast = document.querySelector(`.alert[data-toast-id="${id1}"]`);
-      expect(rightToast?.className).toContain("animate__animated");
-      expect(rightToast?.className).toContain("animate__fadeInTopRight");
-      expect(rightToast?.className).toContain("hover:scale-[1.01]");
+      const rightToast = document.querySelector(`.toast-card[data-toast-id="${id1}"]`);
+      expect(rightToast?.className).toContain("animate-toast-enter-top");
 
       toast.dismiss(id1);
       flush();
-      expect(rightToast?.className).toContain("animate__fadeOutTopRight");
+      expect(rightToast?.className).toContain("animate-toast-exit-top");
 
       unmountRight();
       toast.clear();
@@ -291,12 +288,12 @@ describe("Custom Toast System", () => {
       const id2 = toast("Left Toast");
       flush();
 
-      const leftToast = document.querySelector(`.alert[data-toast-id="${id2}"]`);
-      expect(leftToast?.className).toContain("animate__fadeInTopLeft");
+      const leftToast = document.querySelector(`.toast-card[data-toast-id="${id2}"]`);
+      expect(leftToast?.className).toContain("animate-toast-enter-top");
 
       toast.dismiss(id2);
       flush();
-      expect(leftToast?.className).toContain("animate__fadeOutTopLeft");
+      expect(leftToast?.className).toContain("animate-toast-exit-top");
 
       unmountLeft();
       toast.clear();
@@ -306,12 +303,12 @@ describe("Custom Toast System", () => {
       const id3 = toast("Bottom Toast");
       flush();
 
-      const bottomToast = document.querySelector(`.alert[data-toast-id="${id3}"]`);
-      expect(bottomToast?.className).toContain("animate__fadeInUp");
+      const bottomToast = document.querySelector(`.toast-card[data-toast-id="${id3}"]`);
+      expect(bottomToast?.className).toContain("animate-toast-enter-bottom");
 
       toast.dismiss(id3);
       flush();
-      expect(bottomToast?.className).toContain("animate__fadeOutDown");
+      expect(bottomToast?.className).toContain("animate-toast-exit-bottom");
     });
 
     it("collapses wrapper height and transitions remaining toasts to new position on dismissal", () => {
@@ -343,7 +340,7 @@ describe("Custom Toast System", () => {
       });
       flush();
 
-      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`);
+      const toastEl = document.querySelector(`.toast-card[data-toast-id="${id}"]`);
       expect(toastEl?.className).toContain("animate__bounceIn");
 
       toast.dismiss(id);
@@ -351,29 +348,31 @@ describe("Custom Toast System", () => {
       expect(toastEl?.className).toContain("animate__bounceOut");
     });
 
-    it("renders micro-interaction transform classes for icons, buttons, and close affordance", () => {
+    it("renders solid-toast card design with animated SVG icons and action button", () => {
       render(() => <Toaster position="top-right" />);
       const id = toast("Transform Test", {
+        type: "success",
         dismissible: true,
         action: { label: "Retry", onClick: () => {} },
       });
       flush();
 
-      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`);
+      const toastEl = document.querySelector(`.toast-card[data-toast-id="${id}"]`);
       expect(toastEl).not.toBeNull();
       expect(toastEl?.className).toContain("hover:-translate-y-0.5");
       expect(toastEl?.className).toContain("active:scale-[0.99]");
 
-      const iconWrapper = toastEl?.querySelector(".animate-toast-icon-pop");
-      expect(iconWrapper).not.toBeNull();
+      // SVG animated icon rendered
+      const svgIcon = toastEl?.querySelector("svg");
+      expect(svgIcon).not.toBeNull();
+      expect(svgIcon?.querySelector("animate")).not.toBeNull();
 
       const actionBtn = toastEl?.querySelector("button.btn-outline");
       expect(actionBtn?.className).toContain("hover:scale-105");
       expect(actionBtn?.className).toContain("active:scale-95");
 
       const closeBtn = toastEl?.querySelector("button[aria-label='Close notification']");
-      expect(closeBtn?.className).toContain("hover:rotate-90");
-      expect(closeBtn?.className).toContain("hover:scale-110");
+      expect(closeBtn).not.toBeNull();
     });
 
     it("dismisses toast via horizontal swipe gesture when exceeding threshold", () => {
@@ -381,7 +380,7 @@ describe("Custom Toast System", () => {
       const id = toast("Swipe Me", { dismissible: true });
       flush();
 
-      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`) as HTMLElement;
+      const toastEl = document.querySelector(`.toast-card[data-toast-id="${id}"]`) as HTMLElement;
       expect(toastEl).not.toBeNull();
 
       // Simulate swipe right past 70px threshold
@@ -400,7 +399,7 @@ describe("Custom Toast System", () => {
       const id = toast("Subtle Tap", { dismissible: true });
       flush();
 
-      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`) as HTMLElement;
+      const toastEl = document.querySelector(`.toast-card[data-toast-id="${id}"]`) as HTMLElement;
       expect(toastEl).not.toBeNull();
 
       // Simulate minor swipe of 20px
@@ -418,7 +417,7 @@ describe("Custom Toast System", () => {
       const id = toast("No Swipe", { dismissible: true, swipeable: false });
       flush();
 
-      const toastEl = document.querySelector(`.alert[data-toast-id="${id}"]`) as HTMLElement;
+      const toastEl = document.querySelector(`.toast-card[data-toast-id="${id}"]`) as HTMLElement;
       expect(toastEl).not.toBeNull();
 
       fireEvent.pointerDown(toastEl, { clientX: 100, button: 0 });
@@ -436,8 +435,8 @@ describe("Custom Toast System", () => {
       const id2 = toast("New Toast");
       flush();
 
-      const oldEl = document.querySelector(`.alert[data-toast-id="${id1}"]`) as HTMLElement;
-      const newEl = document.querySelector(`.alert[data-toast-id="${id2}"]`) as HTMLElement;
+      const oldEl = document.querySelector(`.toast-card[data-toast-id="${id1}"]`) as HTMLElement;
+      const newEl = document.querySelector(`.toast-card[data-toast-id="${id2}"]`) as HTMLElement;
 
       expect(oldEl).not.toBeNull();
       expect(newEl).not.toBeNull();
@@ -446,9 +445,86 @@ describe("Custom Toast System", () => {
       expect(newEl.style.transform).toContain("translate3d(0, 0px, 0)");
       expect(newEl.style.transform).toContain("scale(1)");
 
-      // Older toast (oldEl) has stackIndex 1 -> translateY(10px), scale(0.95)
-      expect(oldEl.style.transform).toContain("translate3d(0, 10px, 0)");
+      // Older toast (oldEl) has stackIndex 1 -> translateY(8px), scale(0.95)
+      expect(oldEl.style.transform).toContain("translate3d(0, 8px, 0)");
       expect(oldEl.style.transform).toContain("scale(0.95)");
+    });
+
+    it("deduplicates and updates an existing toast in place and reactively updates the DOM", () => {
+      render(() => <Toaster position="top-right" />);
+      const id1 = toast("Initial Login Error", { id: "auth-toast" });
+      flush();
+
+      expect(id1).toBe("auth-toast");
+      expect(toasts()).toHaveLength(1);
+      const card = document.querySelector(`.toast-card[data-toast-id="auth-toast"]`) as HTMLElement;
+      expect(card).not.toBeNull();
+      expect(card.textContent).toContain("Initial Login Error");
+
+      // Update with the same id
+      const id2 = toast.error("Invalid Credentials Attempt 2", { id: "auth-toast" });
+      flush();
+
+      expect(id2).toBe("auth-toast");
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].title).toBe("Invalid Credentials Attempt 2");
+      expect(toasts()[0].type).toBe("error");
+
+      // Verify DOM reactively updated without duplicating cards
+      const allCards = document.querySelectorAll(".toast-card");
+      expect(allCards).toHaveLength(1);
+      expect(card.textContent).toContain("Invalid Credentials Attempt 2");
+    });
+
+    it("revives a dismissing toast when re-notified with the same id", () => {
+      vi.useFakeTimers();
+      render(() => <Toaster position="top-right" />);
+      toast("Dismissing Soon", { id: "revive-me" });
+      flush();
+
+      // Trigger dismiss -> enters isDismissing exit lifecycle
+      toast.dismiss("revive-me");
+      flush();
+      expect(toasts()[0].isDismissing).toBe(true);
+
+      // Re-trigger before 250ms exit completes
+      toast("Revived Toast!", { id: "revive-me" });
+      flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].isDismissing).toBe(false);
+      expect(toasts()[0].title).toBe("Revived Toast!");
+
+      // Advance past 250ms; it should NOT be removed because exit timer was cleared
+      vi.advanceTimersByTime(300);
+      flush();
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].title).toBe("Revived Toast!");
+    });
+
+    it("creates duplicates when duplicate option is explicitly true with custom id", () => {
+      render(() => <Toaster position="top-right" />);
+      const id1 = toast("First Item", { id: "item-group", duplicate: true });
+      const id2 = toast("Second Item", { id: "item-group", duplicate: true });
+      flush();
+
+      expect(toasts()).toHaveLength(2);
+      expect(id1).toBe("item-group");
+      expect(id2).toContain("item-group-");
+
+      const allCards = document.querySelectorAll(".toast-card");
+      expect(allCards).toHaveLength(2);
+    });
+
+    it("creates duplicate toasts by default when no id is provided", () => {
+      render(() => <Toaster position="top-right" />);
+      toast("Same Message");
+      toast("Same Message");
+      flush();
+
+      expect(toasts()).toHaveLength(2);
+      const allCards = document.querySelectorAll(".toast-card");
+      expect(allCards).toHaveLength(2);
     });
   });
 });
