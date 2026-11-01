@@ -9,9 +9,9 @@ collection users {
   }
 
   access: {
-    read: user.id == id || user.role == "admin";
+    read: user.id == data.id || user.role == "admin";
     create: true;
-    update: user.id == id || user.role == "admin";
+    update: user.id == data.id || user.role == "admin";
     delete: user.role == "admin";
   }
 }

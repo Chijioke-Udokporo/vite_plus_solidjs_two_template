@@ -16,10 +16,6 @@ config {
 				accessTokenExpiry: "15m";
 				refreshTokenExpiry: "7d";
 			}
-			mfa: {
-				enabled: true;
-				enforceForRoles: ["admin", "super"];
-			}
 			lockout: {
 				maxAttempts: 5;
 				durationMinutes: 15;
@@ -39,7 +35,7 @@ config {
 			enabled: true;
 		}
 		upload: {
-			visibility: "private";s
+			visibility: "private";
 		}
 	}
 	monitoring: {
