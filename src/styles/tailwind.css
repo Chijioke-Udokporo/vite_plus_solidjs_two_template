@@ -37,6 +37,6 @@
 }
 
 @theme {
-  --font-sans: "Bricolage Grotesque", "Outfit", sans-serif;
-  --font-display: "Recursive", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Gotham", "Bricolage Grotesque", "Outfit", sans-serif;
+  --font-display: "Gotham", "Recursive", ui-sans-serif, system-ui, sans-serif;
 }

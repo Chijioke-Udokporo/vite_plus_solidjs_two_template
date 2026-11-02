@@ -1,10 +1,11 @@
+@import "./fonts/gotham/stylesheet.css";
 @import "./tailwind.css";
 @import "animate.css";
 
 input,
 select,
 textarea {
-  @apply text-sm;
+  @apply text-sm outline-none focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50;
 }
 
 .font-sans,
