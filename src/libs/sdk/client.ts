@@ -62,10 +62,12 @@
 // ==========================================
 export type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue };
 
+export type StreamAction = "created" | "updated" | "deleted" | (string & Record<never, never>);
+
 export interface StreamEvent<T = unknown> {
   id: string;
   collection: string;
-  action: "created" | "updated" | "deleted" | string;
+  action: StreamAction;
   data: T;
   timestamp: number;
 }
@@ -877,7 +879,7 @@ export interface CequreAuditLog {
   userId?: (string) | null;
   requestId?: (string) | null;
   sequence?: (number) | null;
-  metadata?: (JSONValue) | null;
+  metadata?: JSONValue;
   hmac: string;
   prevHmac?: (string) | null;
 }
@@ -889,7 +891,7 @@ export interface CequreAuditLogCreateInput {
   userId?: (string) | null;
   requestId?: (string) | null;
   sequence?: (number) | null;
-  metadata?: (JSONValue) | null;
+  metadata?: JSONValue;
   hmac: string;
   prevHmac?: (string) | null;
 }
@@ -901,7 +903,7 @@ export interface CequreAuditLogUpdateInput {
   userId?: (string) | null;
   requestId?: (string) | null;
   sequence?: (number) | null;
-  metadata?: (JSONValue) | null;
+  metadata?: JSONValue;
   hmac?: string;
   prevHmac?: (string) | null;
 }
@@ -916,7 +918,7 @@ export interface CequreAuditLogPopulated {
   userId?: (string) | null;
   requestId?: (string) | null;
   sequence?: (number) | null;
-  metadata?: (JSONValue) | null;
+  metadata?: JSONValue;
   hmac: string;
   prevHmac?: (string) | null;
 }
@@ -931,7 +933,7 @@ export interface CequreAuditLogPopulatedDepth2 {
   userId?: (string) | null;
   requestId?: (string) | null;
   sequence?: (number) | null;
-  metadata?: (JSONValue) | null;
+  metadata?: JSONValue;
   hmac: string;
   prevHmac?: (string) | null;
 }
@@ -946,7 +948,7 @@ export interface CequreAuditLogWhereInput {
   userId?: ((string) | null) | FilterOperators<(string) | null>;
   requestId?: ((string) | null) | FilterOperators<(string) | null>;
   sequence?: ((number) | null) | FilterOperators<(number) | null>;
-  metadata?: ((JSONValue) | null) | FilterOperators<(JSONValue) | null>;
+  metadata?: (JSONValue) | FilterOperators<JSONValue>;
   hmac?: (string) | FilterOperators<string>;
   prevHmac?: ((string) | null) | FilterOperators<(string) | null>;
   AND?: Array<CequreAuditLogWhereInput>;
@@ -1612,12 +1614,12 @@ export class CequreCore {
         if (manualClose || err?.name === "AbortError") return;
         if (retryCount < maxRetries) {
           retryCount++;
-          setTimeout(connectFetch, Math.min(1000 * 2 ** retryCount, 30000));
+          setTimeout(() => { void connectFetch(); }, Math.min(1000 * 2 ** retryCount, 30000));
         }
       }
     };
 
-    connectFetch();
+    void connectFetch();
 
     return () => {
       manualClose = true;
@@ -1787,7 +1789,7 @@ export class CequreRealtimeCore {
   }
 
   private _ensureSubscription(sub: LiveQuerySubscription): void {
-    this._ensureChannel(sub.collection);
+    void this._ensureChannel(sub.collection);
 
     if (!sub.initialized && !sub.pendingPromise) {
       sub.pendingPromise = this.queryCollection(sub.collection, sub.params)

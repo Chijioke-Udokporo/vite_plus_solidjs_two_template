@@ -10,7 +10,6 @@ const loader = query(async () => {
   "use server";
 
   const res = await sdkClient().health.get();
-  console.log(res.data);
   return res.data;
 }, "health");
 
@@ -26,7 +25,6 @@ export default function App() {
   const loaderData = createMemo(() => loader());
 
   action.onSettled(({ result }) => {
-    console.log(result);
     if (result?.error) toast.error(result?.error, { id: "error-login" });
   });
 
