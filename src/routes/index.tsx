@@ -1,10 +1,10 @@
 import { toast } from "@libs/toast";
-import { createMemo } from "solid-js";
+import { createMemo, createSignal } from "solid-js";
 import { formAction, query } from "@solidjs/router";
 import { sdkClient, type SDK } from "@libs/sdk";
 import { AuthQueries } from "@queries/auth.queries";
 import { respond } from "@solidjs/web";
-import { Input } from "@components/ui";
+import { Button, Input } from "@components/ui";
 
 const loader = query(async () => {
   "use server";
@@ -23,9 +23,13 @@ const action = formAction(async (fd: FormData) => {
 
 export default function App() {
   const loaderData = createMemo(() => loader());
+  const [submitting, setSubmitting] = createSignal(false);
+
+  action.onSubmit(() => setSubmitting(true));
 
   action.onSettled(({ result }) => {
     if (result?.error) toast.error(result?.error, { id: "error-login" });
+    setTimeout(() => setSubmitting(false), 1500);
   });
 
   return (
@@ -34,6 +38,7 @@ export default function App() {
 
       <form method="post" action={action} class="flex flex-col gap-3 w-[20em] ">
         <Input
+          icon="solar:letter-linear"
           title="email"
           value="me@me.com"
           required
@@ -45,6 +50,7 @@ export default function App() {
         />
 
         <Input
+          icon="solar:lock-password-linear"
           title="password"
           value="wertyuiop"
           name="password"
@@ -54,7 +60,7 @@ export default function App() {
           placeholder="Enter password"
           class="input w-full"
         />
-        <button class="btn btn-primary w-full">SUBMIT</button>
+        <Button title="Submit" isSubmitting={submitting} class="btn btn-primary w-full" />
       </form>
     </div>
   );
