@@ -1,6 +1,4 @@
 import { createMemo } from "solid-js";
-import { AuthQueries } from "@queries/auth.queries";
-import { useErrorToast } from "@hooks/loader-error.hook";
 
 export default function App() {
   const loaderData = createMemo(() => AuthQueries.Me());

@@ -3,6 +3,7 @@ import solid from "@solidjs/vite-plugin";
 import tailwind from "@tailwindcss/vite";
 import { fileRoutes } from "filesystem-routing/vite";
 import { nitro } from "nitro/vite";
+import unimport from "unimport/unplugin";
 
 export default defineConfig({
   resolve: {
@@ -21,6 +22,16 @@ export default defineConfig({
     nitro({
       preset: "vercel",
       serverEntry: false,
+    }),
+    unimport.vite({
+      dts: true,
+      dirs: ["./src/**/*.ts", "./src/components/**/*.tsx"],
+      addons: [
+        {
+          name: "generated-declaration-header",
+          declaration: (dts) => `// @ts-nocheck\n/* oxlint-disable */\n${dts}`,
+        },
+      ],
     }),
   ],
   fmt: {},

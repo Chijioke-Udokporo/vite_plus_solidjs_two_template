@@ -25,6 +25,14 @@
     "types": ["vite/client", "bun"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src", "cequre", "tests", "_tests", "file-routes.d.ts", "iconify.d.ts"],
+  "include": [
+    "src",
+    "cequre",
+    "tests",
+    "_tests",
+    "file-routes.d.ts",
+    "iconify.d.ts",
+    "unimport.d.ts"
+  ],
   "exclude": ["temp", "node_modules", "dist", ".vercel"]
 }
