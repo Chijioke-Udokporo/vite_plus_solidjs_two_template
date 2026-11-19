@@ -31,7 +31,7 @@
  * // Subscribe to low-level realtime updates
  * const unsubscribe = api.users.subscribeWS((event) => console.log("User updated!", event.data));
  * 
- * --- 2. REACTIVE REALTIME CLIENT (Convex-style Live Queries & Optimistic Mutations) ---
+ * --- 2. REACTIVE REALTIME CLIENT (Live Collection Subscriptions & Optimistic Mutations) ---
  * import { createCequreRealtimeClient } from './cequre-sdk';
  * 
  * export const liveApi = createCequreRealtimeClient({
@@ -320,21 +320,18 @@ export interface Tasks {
   id: string;
   createdAt: string;
   updatedAt: string;
-  userId: string;
   title: string;
   description?: (string) | null;
   isCompleted?: (boolean) | null;
 }
 
 export interface TasksCreateInput {
-  userId: string;
   title: string;
   description?: (string) | null;
   isCompleted?: (boolean) | null;
 }
 
 export interface TasksUpdateInput {
-  userId?: string;
   title?: string;
   description?: (string) | null;
   isCompleted?: (boolean) | null;
@@ -344,14 +341,6 @@ export interface TasksPopulated {
   id: string;
   createdAt: string;
   updatedAt: string;
-  userId: {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  name: string;
-  email: string;
-  role: "admin" | "user";
-};
   title: string;
   description?: (string) | null;
   isCompleted?: (boolean) | null;
@@ -361,14 +350,6 @@ export interface TasksPopulatedDepth2 {
   id: string;
   createdAt: string;
   updatedAt: string;
-  userId: {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  name: string;
-  email: string;
-  role: "admin" | "user";
-};
   title: string;
   description?: (string) | null;
   isCompleted?: (boolean) | null;
@@ -378,16 +359,6 @@ export interface TasksWhereInput {
   id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  userId?: (FilterOperators) | ({
-  id?: (string) | FilterOperators<string>;
-  createdAt?: (string | Date) | FilterOperators<string | Date>;
-  updatedAt?: (string | Date) | FilterOperators<string | Date>;
-  name?: (string) | FilterOperators<string>;
-  email?: (string) | FilterOperators<string>;
-  role?: ("admin" | "user") | FilterOperators<"admin" | "user">;
-  AND?: Array<UsersWhereInput>;
-  OR?: Array<UsersWhereInput>;
-});
   title?: (string) | FilterOperators<string>;
   description?: ((string) | null) | FilterOperators<(string) | null>;
   isCompleted?: ((boolean) | null) | FilterOperators<(boolean) | null>;
@@ -395,7 +366,7 @@ export interface TasksWhereInput {
   OR?: Array<TasksWhereInput>;
 }
 
-export type TasksSortField = "id" | "userId" | "title" | "description" | "isCompleted" | "createdAt" | "updatedAt";
+export type TasksSortField = "id" | "title" | "description" | "isCompleted" | "createdAt" | "updatedAt";
 export type TasksSort = TasksSortField | `-${TasksSortField}` | { [P in TasksSortField]?: SortOrder };
 
 export interface TasksQueryInput {
@@ -1186,12 +1157,6 @@ export interface HealthResponse {
 export const TasksObject = {
   "slug": "tasks",
   "fields": [
-    {
-      "name": "userId",
-      "type": "relationship",
-      "required": true,
-      "target": "users"
-    },
     {
       "name": "title",
       "type": "text",
@@ -2412,7 +2377,7 @@ export class CequreClient extends CequreCore {
 
   private _init_tasks() {
     return {
-      schema: {"userId":{"type":"relationship","required":true,"target":"users"},"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"isCompleted":{"type":"boolean","required":false}} as const,
+      schema: {"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"isCompleted":{"type":"boolean","required":false}} as const,
       object: TasksObject,
       get: ((params?: { id?: string; query?: TasksQueryInput; depth?: number }) => {
         const qObj = params?.query || ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);
