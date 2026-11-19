@@ -32,7 +32,7 @@ export default function App() {
         <Input
           icon="solar:lock-password-linear"
           title="password"
-          value="wertyuiop"
+          value="qwertyuiop"
           name="password"
           autocomplete="current-password"
           required

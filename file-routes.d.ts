@@ -45,6 +45,12 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<Pick<typeof import("./src/routes/login"), Extract<"default", keyof typeof import("./src/routes/login")>>>;
       $$route?: undefined;
+    },
+    {
+      path: "/real";
+      page: true;
+      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/real"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/real")>>>;
+      $$route?: undefined;
     }
   ];
   export default routes;
@@ -56,6 +62,14 @@ declare module "virtual:file-routes" {
       id: "/";
       page: true;
       $component: FileRouteLazyRef<Pick<typeof import("./src/routes/index"), Extract<"default", keyof typeof import("./src/routes/index")>>>;
+      $$route?: undefined;
+      children?: undefined;
+    },
+    {
+      path: "/real";
+      id: "/real";
+      page: true;
+      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/real"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/real")>>>;
       $$route?: undefined;
       children?: undefined;
     },

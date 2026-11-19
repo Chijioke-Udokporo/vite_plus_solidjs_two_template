@@ -1,0 +1,15 @@
+collection tasks {
+	fields {
+		title: text @unique;
+		description: textarea @optional;
+		isCompleted: boolean @default(false) @optional;
+	}
+	access {
+		read: true;
+		create: true;
+	}
+	realtime {
+		sse: true;
+		ws: true;
+	}
+}

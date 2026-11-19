@@ -316,6 +316,150 @@ export interface AuthMfaLoginInput {
   backupCode?: string;
 }
 
+export interface Tasks {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  title: string;
+  description?: (string) | null;
+  isCompleted?: (boolean) | null;
+}
+
+export interface TasksCreateInput {
+  userId: string;
+  title: string;
+  description?: (string) | null;
+  isCompleted?: (boolean) | null;
+}
+
+export interface TasksUpdateInput {
+  userId?: string;
+  title?: string;
+  description?: (string) | null;
+  isCompleted?: (boolean) | null;
+}
+
+export interface TasksPopulated {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+};
+  title: string;
+  description?: (string) | null;
+  isCompleted?: (boolean) | null;
+}
+
+export interface TasksPopulatedDepth2 {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+};
+  title: string;
+  description?: (string) | null;
+  isCompleted?: (boolean) | null;
+}
+
+export interface TasksWhereInput {
+  id?: (string) | FilterOperators<string>;
+  createdAt?: (string | Date) | FilterOperators<string | Date>;
+  updatedAt?: (string | Date) | FilterOperators<string | Date>;
+  userId?: (FilterOperators) | ({
+  id?: (string) | FilterOperators<string>;
+  createdAt?: (string | Date) | FilterOperators<string | Date>;
+  updatedAt?: (string | Date) | FilterOperators<string | Date>;
+  name?: (string) | FilterOperators<string>;
+  email?: (string) | FilterOperators<string>;
+  role?: ("admin" | "user") | FilterOperators<"admin" | "user">;
+  AND?: Array<UsersWhereInput>;
+  OR?: Array<UsersWhereInput>;
+});
+  title?: (string) | FilterOperators<string>;
+  description?: ((string) | null) | FilterOperators<(string) | null>;
+  isCompleted?: ((boolean) | null) | FilterOperators<(boolean) | null>;
+  AND?: Array<TasksWhereInput>;
+  OR?: Array<TasksWhereInput>;
+}
+
+export type TasksSortField = "id" | "userId" | "title" | "description" | "isCompleted" | "createdAt" | "updatedAt";
+export type TasksSort = TasksSortField | `-${TasksSortField}` | { [P in TasksSortField]?: SortOrder };
+
+export interface TasksQueryInput {
+  where?: TasksWhereInput;
+  sort?: TasksSort;
+  limit?: number;
+  page?: number;
+  depth?: number;
+}
+
+export interface PaginatedTasks {
+  docs: Array<Tasks>;
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PaginatedTasksPopulated {
+  docs: Array<TasksPopulated>;
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PaginatedTasksPopulatedDepth2 {
+  docs: Array<TasksPopulatedDepth2>;
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface TasksBulkCreateInput {
+  items: Array<TasksCreateInput>;
+}
+
+export interface TasksBulkDeleteInput {
+  ids: Array<string>;
+}
+
+export interface TasksBulkCreateResult {
+  created?: Array<Tasks>;
+  errors?: Array<{
+  index?: number;
+  error?: CequreError;
+}>;
+}
+
+export interface TasksBulkDeleteResult {
+  deleted?: Array<string>;
+  errors?: Array<{
+  id?: string;
+  error?: CequreError;
+}>;
+}
+
 export interface Users {
   id: string;
   createdAt: string;
@@ -1035,6 +1179,81 @@ export interface HealthResponse {
   status: string;
   timestamp: string;
 }
+
+// ==========================================
+// Generated Collection Objects
+// ==========================================
+export const TasksObject = {
+  "slug": "tasks",
+  "fields": [
+    {
+      "name": "userId",
+      "type": "relationship",
+      "required": true,
+      "target": "users"
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": true,
+      "unique": true
+    },
+    {
+      "name": "description",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "name": "isCompleted",
+      "type": "boolean",
+      "required": false,
+      "default": false
+    }
+  ]
+} as const;
+export type TasksObjectDefinition = typeof TasksObject;
+
+export const UsersObject = {
+  "slug": "users",
+  "fields": [
+    {
+      "name": "name",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "email",
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    {
+      "name": "password",
+      "type": "password",
+      "required": true
+    },
+    {
+      "name": "role",
+      "type": "select",
+      "required": true,
+      "values": [
+        "admin",
+        "user"
+      ],
+      "options": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    }
+  ]
+} as const;
+export type UsersObjectDefinition = typeof UsersObject;
+
+export const collections = {
+  tasks: TasksObject,
+  users: UsersObject
+} as const;
 
 
 // ==========================================
@@ -2191,9 +2410,45 @@ export class CequreClient extends CequreCore {
 
   private _cache: Record<string, any> = {};
 
+  private _init_tasks() {
+    return {
+      schema: {"userId":{"type":"relationship","required":true,"target":"users"},"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"isCompleted":{"type":"boolean","required":false}} as const,
+      object: TasksObject,
+      get: ((params?: { id?: string; query?: TasksQueryInput; depth?: number }) => {
+        const qObj = params?.query || ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);
+        if (params?.id) return this.request<any>('GET', `/api/tasks/${params.id}${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
+        return this.request<any>('GET', `/api/tasks${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
+      }) as {
+        (params: { id: string, query: { depth: 2 } }): Promise<SDKResponse<TasksPopulatedDepth2>>;
+        (params: { id: string, query: { depth: 1 } }): Promise<SDKResponse<TasksPopulated>>;
+        (params: { id: string, query?: { depth?: number } }): Promise<SDKResponse<Tasks>>;
+        (params: { query: TasksQueryInput & { depth: 2 } }): Promise<SDKResponse<PaginatedTasksPopulatedDepth2>>;
+        (params: { query: TasksQueryInput & { depth: 1 } }): Promise<SDKResponse<PaginatedTasksPopulated>>;
+        (params?: { query?: TasksQueryInput }): Promise<SDKResponse<PaginatedTasks>>;
+      },
+      post: (data: TasksCreateInput) => this.request<Tasks>('POST', `/api/tasks`, data),
+      patch: (id: string, data: TasksUpdateInput) => this.request<Tasks>('PATCH', `/api/tasks/${id}`, data),
+      delete: (id: string) => this.request<void>('DELETE', `/api/tasks/${id}`),
+      createMany: (items: TasksCreateInput[]) => this.request<{ created: Tasks[]; errors: { index: number; error: unknown }[] }>('POST', `/api/tasks/bulk`, { items }),
+      deleteMany: (ids: string[]) => this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>('DELETE', `/api/tasks/bulk`, { ids }),
+      subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Tasks }) => void) => await this.subscribeSSE('tasks', onEvent),
+      subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Tasks }) => void) => await this.subscribeWS('tasks', onEvent),
+      durableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Tasks>[]>('GET', `/api/tasks/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      stream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Tasks>[]>('GET', `/api/tasks/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+    };
+  }
+
+  get tasks(): ReturnType<typeof this._init_tasks> {
+    if (!this._cache['tasks']) {
+      this._cache['tasks'] = this._init_tasks();
+    }
+    return this._cache['tasks'];
+  }
+
   private _init_users() {
     return {
       schema: {"name":{"type":"text","required":true},"email":{"type":"email","required":true},"role":{"type":"select","required":true}} as const,
+      object: UsersObject,
       get: ((params?: { id?: string; query?: UsersQueryInput; depth?: number }) => {
         const qObj = params?.query || ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);
         if (params?.id) return this.request<any>('GET', `/api/users/${params.id}${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
@@ -2358,6 +2613,19 @@ export class CequreClient extends CequreCore {
     return this._cache['audit'];
   }
 
+  private _init_ws() {
+    return {
+      get: () => this.request<unknown>('GET', `/api/ws`),
+    };
+  }
+
+  get ws(): ReturnType<typeof this._init_ws> {
+    if (!this._cache['ws']) {
+      this._cache['ws'] = this._init_ws();
+    }
+    return this._cache['ws'];
+  }
+
   private _init_cequreMedia() {
     return {
       get: () => this.request<unknown>('GET', `/api/cequre_media`),
@@ -2409,6 +2677,38 @@ export function createCequreClient(config: CequreClientConfig = {}) {
 export class CequreRealtimeClient extends CequreRealtimeCore {
 
   private _cache: Record<string, any> = {};
+
+  private _init_realtime_tasks() {
+    return {
+      query: async (params?: { query?: TasksQueryInput; depth?: number }): Promise<Tasks[]> => {
+        return this.queryCollection<Tasks>('tasks', params);
+      },
+      subscribe: (
+        params: { query?: TasksQueryInput; depth?: number } | undefined,
+        callback: (data: Tasks[]) => void
+      ): (() => void) => {
+        return this.subscribeCollection<Tasks>('tasks', params, callback);
+      },
+      mutate: {
+        create: async (data: TasksCreateInput): Promise<Tasks> => {
+          return this.mutateCreate<Tasks, TasksCreateInput>('tasks', data, () => (this.client as any).tasks.post(data));
+        },
+        patch: async (id: string, data: TasksUpdateInput): Promise<Tasks> => {
+          return this.mutatePatch<Tasks, TasksUpdateInput>('tasks', id, data, () => (this.client as any).tasks.patch(id, data));
+        },
+        delete: async (id: string): Promise<void> => {
+          return this.mutateDelete('tasks', id, () => (this.client as any).tasks.delete(id));
+        },
+      }
+    };
+  }
+
+  get tasks(): ReturnType<typeof this._init_realtime_tasks> {
+    if (!this._cache['tasks']) {
+      this._cache['tasks'] = this._init_realtime_tasks();
+    }
+    return this._cache['tasks'];
+  }
 
   private _init_realtime_users() {
     return {
