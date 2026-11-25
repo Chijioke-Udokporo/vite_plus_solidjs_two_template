@@ -304,6 +304,7 @@ export interface Blogs {
   id: string;
   createdAt: string;
   updatedAt: string;
+  user?: (string) | null;
   title: string;
   description?: (string) | null;
   image: {
@@ -317,6 +318,7 @@ export interface Blogs {
 }
 
 export interface BlogsCreateInput {
+  user?: (string) | null;
   title: string;
   description?: (string) | null;
   image: ({
@@ -330,6 +332,7 @@ export interface BlogsCreateInput {
 }
 
 export interface BlogsUpdateInput {
+  user?: (string) | null;
   title?: string;
   description?: (string) | null;
   image?: ({
@@ -346,6 +349,14 @@ export interface BlogsPopulated {
   id: string;
   createdAt: string;
   updatedAt: string;
+  user?: {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+};
   title: string;
   description?: (string) | null;
   image: {
@@ -362,6 +373,14 @@ export interface BlogsPopulatedDepth2 {
   id: string;
   createdAt: string;
   updatedAt: string;
+  user?: {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+};
   title: string;
   description?: (string) | null;
   image: {
@@ -378,6 +397,16 @@ export interface BlogsWhereInput {
   id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
+  user?: (FilterOperators) | ({
+  id?: (string) | FilterOperators<string>;
+  createdAt?: (string | Date) | FilterOperators<string | Date>;
+  updatedAt?: (string | Date) | FilterOperators<string | Date>;
+  name?: (string) | FilterOperators<string>;
+  email?: (string) | FilterOperators<string>;
+  role?: ("admin" | "user") | FilterOperators<"admin" | "user">;
+  AND?: Array<UsersWhereInput>;
+  OR?: Array<UsersWhereInput>;
+});
   title?: (string) | FilterOperators<string>;
   description?: ((string) | null) | FilterOperators<(string) | null>;
   image?: ({
@@ -392,7 +421,7 @@ export interface BlogsWhereInput {
   OR?: Array<BlogsWhereInput>;
 }
 
-export type BlogsSortField = "id" | "title" | "description" | "image" | "isCompleted" | "createdAt" | "updatedAt";
+export type BlogsSortField = "id" | "user" | "title" | "description" | "image" | "isCompleted" | "createdAt" | "updatedAt";
 export type BlogsSort = BlogsSortField | `-${BlogsSortField}` | { [P in BlogsSortField]?: SortOrder };
 
 export interface BlogsQueryInput {
@@ -1183,6 +1212,12 @@ export interface HealthResponse {
 export const BlogsObject = {
   "slug": "blogs",
   "fields": [
+    {
+      "name": "user",
+      "type": "relationship",
+      "required": false,
+      "target": "users"
+    },
     {
       "name": "title",
       "type": "text",
@@ -2779,7 +2814,7 @@ export class CequreClient extends CequreCore {
 
   private _init_blogs() {
     return {
-      schema: {"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"image":{"type":"upload","required":true},"isCompleted":{"type":"boolean","required":false}} as const,
+      schema: {"user":{"type":"relationship","required":false,"target":"users"},"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"image":{"type":"upload","required":true},"isCompleted":{"type":"boolean","required":false}} as const,
       object: BlogsObject,
       get: ((params?: { id?: string; query?: BlogsQueryInput; depth?: number }) => {
         const qObj = params?.query || ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);

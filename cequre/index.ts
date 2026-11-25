@@ -10,6 +10,6 @@ export const app = createCequre({
 if (process.env.CEQURE_CLI_GENERATE) {
   await app.init();
 } else if (import.meta.main && process.env.NODE_ENV !== "test") {
-  const port = process.env.PORT === "any" ? 0 : Number(process.env.PORT) || 4080;
+  const port = process.env.PORT === "any" ? 0 : Number(process.env.PORT) || 4000;
   app.start({ port }).catch(console.error);
 }

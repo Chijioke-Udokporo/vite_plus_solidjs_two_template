@@ -1,5 +1,6 @@
 collection blogs {
 	fields {
+		user: relationship("users") @optional;
 		title: text @unique;
 		description: textarea @optional;
 		image: upload;
