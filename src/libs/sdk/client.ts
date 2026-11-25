@@ -300,69 +300,111 @@ export interface AuthMfaLoginInput {
   backupCode?: string;
 }
 
-export interface Tasks {
+export interface Blogs {
   id: string;
   createdAt: string;
   updatedAt: string;
   title: string;
   description?: (string) | null;
+  image: {
+  filename?: string;
+  originalName?: string;
+  mimetype?: string;
+  size?: number;
+  url?: string;
+};
   isCompleted?: (boolean) | null;
 }
 
-export interface TasksCreateInput {
+export interface BlogsCreateInput {
   title: string;
   description?: (string) | null;
+  image: ({
+  filename?: string;
+  originalName?: string;
+  mimetype?: string;
+  size?: number;
+  url?: string;
+}) | (string | File | Blob);
   isCompleted?: (boolean) | null;
 }
 
-export interface TasksUpdateInput {
+export interface BlogsUpdateInput {
   title?: string;
   description?: (string) | null;
+  image?: ({
+  filename?: string;
+  originalName?: string;
+  mimetype?: string;
+  size?: number;
+  url?: string;
+}) | (string | File | Blob);
   isCompleted?: (boolean) | null;
 }
 
-export interface TasksPopulated {
+export interface BlogsPopulated {
   id: string;
   createdAt: string;
   updatedAt: string;
   title: string;
   description?: (string) | null;
+  image: {
+  filename?: string;
+  originalName?: string;
+  mimetype?: string;
+  size?: number;
+  url?: string;
+};
   isCompleted?: (boolean) | null;
 }
 
-export interface TasksPopulatedDepth2 {
+export interface BlogsPopulatedDepth2 {
   id: string;
   createdAt: string;
   updatedAt: string;
   title: string;
   description?: (string) | null;
+  image: {
+  filename?: string;
+  originalName?: string;
+  mimetype?: string;
+  size?: number;
+  url?: string;
+};
   isCompleted?: (boolean) | null;
 }
 
-export interface TasksWhereInput {
+export interface BlogsWhereInput {
   id?: (string) | FilterOperators<string>;
   createdAt?: (string | Date) | FilterOperators<string | Date>;
   updatedAt?: (string | Date) | FilterOperators<string | Date>;
   title?: (string) | FilterOperators<string>;
   description?: ((string) | null) | FilterOperators<(string) | null>;
+  image?: ({
+  filename?: string;
+  originalName?: string;
+  mimetype?: string;
+  size?: number;
+  url?: string;
+}) | (FilterOperators);
   isCompleted?: ((boolean) | null) | FilterOperators<(boolean) | null>;
-  AND?: Array<TasksWhereInput>;
-  OR?: Array<TasksWhereInput>;
+  AND?: Array<BlogsWhereInput>;
+  OR?: Array<BlogsWhereInput>;
 }
 
-export type TasksSortField = "id" | "title" | "description" | "isCompleted" | "createdAt" | "updatedAt";
-export type TasksSort = TasksSortField | `-${TasksSortField}` | { [P in TasksSortField]?: SortOrder };
+export type BlogsSortField = "id" | "title" | "description" | "image" | "isCompleted" | "createdAt" | "updatedAt";
+export type BlogsSort = BlogsSortField | `-${BlogsSortField}` | { [P in BlogsSortField]?: SortOrder };
 
-export interface TasksQueryInput {
-  where?: TasksWhereInput;
-  sort?: TasksSort;
+export interface BlogsQueryInput {
+  where?: BlogsWhereInput;
+  sort?: BlogsSort;
   limit?: number;
   page?: number;
   depth?: number;
 }
 
-export interface PaginatedTasks {
-  docs: Array<Tasks>;
+export interface PaginatedBlogs {
+  docs: Array<Blogs>;
   totalDocs: number;
   limit: number;
   page: number;
@@ -371,8 +413,8 @@ export interface PaginatedTasks {
   hasPrevPage: boolean;
 }
 
-export interface PaginatedTasksPopulated {
-  docs: Array<TasksPopulated>;
+export interface PaginatedBlogsPopulated {
+  docs: Array<BlogsPopulated>;
   totalDocs: number;
   limit: number;
   page: number;
@@ -381,8 +423,8 @@ export interface PaginatedTasksPopulated {
   hasPrevPage: boolean;
 }
 
-export interface PaginatedTasksPopulatedDepth2 {
-  docs: Array<TasksPopulatedDepth2>;
+export interface PaginatedBlogsPopulatedDepth2 {
+  docs: Array<BlogsPopulatedDepth2>;
   totalDocs: number;
   limit: number;
   page: number;
@@ -391,23 +433,23 @@ export interface PaginatedTasksPopulatedDepth2 {
   hasPrevPage: boolean;
 }
 
-export interface TasksBulkCreateInput {
-  items: Array<TasksCreateInput>;
+export interface BlogsBulkCreateInput {
+  items: Array<BlogsCreateInput>;
 }
 
-export interface TasksBulkDeleteInput {
+export interface BlogsBulkDeleteInput {
   ids: Array<string>;
 }
 
-export interface TasksBulkCreateResult {
-  created?: Array<Tasks>;
+export interface BlogsBulkCreateResult {
+  created?: Array<Blogs>;
   errors?: Array<{
   index?: number;
   error?: CequreError;
 }>;
 }
 
-export interface TasksBulkDeleteResult {
+export interface BlogsBulkDeleteResult {
   deleted?: Array<string>;
   errors?: Array<{
   id?: string;
@@ -1138,8 +1180,8 @@ export interface HealthResponse {
 // ==========================================
 // Generated Collection Objects
 // ==========================================
-export const TasksObject = {
-  "slug": "tasks",
+export const BlogsObject = {
+  "slug": "blogs",
   "fields": [
     {
       "name": "title",
@@ -1153,6 +1195,11 @@ export const TasksObject = {
       "required": false
     },
     {
+      "name": "image",
+      "type": "upload",
+      "required": true
+    },
+    {
       "name": "isCompleted",
       "type": "boolean",
       "required": false,
@@ -1160,7 +1207,7 @@ export const TasksObject = {
     }
   ]
 } as const;
-export type TasksObjectDefinition = typeof TasksObject;
+export type BlogsObjectDefinition = typeof BlogsObject;
 
 export const UsersObject = {
   "slug": "users",
@@ -1200,7 +1247,7 @@ export const UsersObject = {
 export type UsersObjectDefinition = typeof UsersObject;
 
 export const collections = {
-  tasks: TasksObject,
+  blogs: BlogsObject,
   users: UsersObject
 } as const;
 
@@ -1315,6 +1362,36 @@ export class CequreCore {
       this.config.credentials,
       "x-api-key",
       (signal) => this.request<T>("GET", path, undefined, {}, signal),
+      options,
+    );
+  }
+
+  /** @internal */
+  watchCollection<T>(slug: string, options: CollectionWatchOptions<unknown>): AsyncIterable<T | null> {
+    const basePath = "/api/" + encodeURIComponent(slug);
+    const baseQuery = options?.query;
+    const qObj = baseQuery !== undefined && typeof baseQuery === "object" && baseQuery !== null && options?.depth !== undefined && !("depth" in baseQuery)
+      ? { ...(baseQuery as Record<string, unknown>), depth: options.depth }
+      : baseQuery !== undefined
+        ? baseQuery
+        : options?.depth !== undefined
+          ? { depth: options.depth }
+          : undefined;
+    const qs = qObj ? "?" + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : "";
+    const readPath = options?.id
+      ? basePath + "/" + encodeURIComponent(options.id) + qs
+      : basePath + qs;
+    return watchCollection<T>(
+      this.config.baseUrl + basePath + "/watch",
+      async () => {
+        const headers = new Headers(await this.resolveHeaders());
+        const auth = await this.getAuthHeader();
+        if (auth && !headers.has("Authorization")) headers.set("Authorization", auth);
+        return headers;
+      },
+      this.config.credentials,
+      "x-api-key",
+      (signal) => this.request<T>("GET", readPath, undefined, {}, signal),
       options,
     );
   }
@@ -2377,7 +2454,14 @@ export interface GlobalWatchOptions {
   signal?: AbortSignal;
 }
 
-type GlobalWatchEvent = { type: "connected" | "global.changed"; id?: string };
+export interface CollectionWatchOptions<TQuery = Record<string, unknown>> extends GlobalWatchOptions {
+  id?: string;
+  query?: TQuery;
+  depth?: number;
+}
+
+type WatchChangedEventName = "global.changed" | "collection.changed";
+type WatchEvent = { type: "connected" | WatchChangedEventName; id?: string };
 
 function watchGlobal<T>(
   endpoint: string,
@@ -2390,7 +2474,63 @@ function watchGlobal<T>(
   if (options?.transport !== "ws" && options?.transport !== "sse" && options?.transport !== "durable") {
     throw new TypeError('Global watch transport must be "ws", "sse", or "durable"');
   }
+  return watchResource<T>(
+    endpoint,
+    resolveHeaders,
+    credentials,
+    apiKeyHeader,
+    read,
+    options,
+    "global.changed",
+    "global",
+    (result) => {
+      if (result.error) throw new Error(result.error.message);
+      return result.data && Object.keys(result.data).length ? result.data : null;
+    },
+  );
+}
 
+function watchCollection<T>(
+  endpoint: string,
+  resolveHeaders: () => Promise<Headers>,
+  credentials: RequestCredentials | undefined,
+  apiKeyHeader: string,
+  read: (signal: AbortSignal) => Promise<SDKResponse<T>>,
+  options: CollectionWatchOptions<unknown>,
+): AsyncIterable<T | null> {
+  if (options?.transport !== "ws" && options?.transport !== "sse" && options?.transport !== "durable") {
+    throw new TypeError('Collection watch transport must be "ws", "sse", or "durable"');
+  }
+  return watchResource<T>(
+    endpoint,
+    resolveHeaders,
+    credentials,
+    apiKeyHeader,
+    read,
+    options,
+    "collection.changed",
+    "collection",
+    (result) => {
+      if (result.error) {
+        if (options.id && result.status === 404) return null;
+        throw new Error(result.error.message);
+      }
+      return result.data ?? null;
+    },
+  );
+}
+
+function watchResource<T>(
+  endpoint: string,
+  resolveHeaders: () => Promise<Headers>,
+  credentials: RequestCredentials | undefined,
+  apiKeyHeader: string,
+  read: (signal: AbortSignal) => Promise<SDKResponse<T>>,
+  options: GlobalWatchOptions,
+  changedEvent: WatchChangedEventName,
+  resourceLabel: "global" | "collection",
+  normalize: (result: SDKResponse<T>) => T | null,
+): AsyncIterable<T | null> {
   return {
     [Symbol.asyncIterator]() {
       const stop = new AbortController();
@@ -2413,22 +2553,21 @@ function watchGlobal<T>(
           const headers = await resolveHeaders();
           if (signal.aborted) return;
           const events = options.transport === "ws"
-            ? watchSocketEvents(endpoint, headers, credentials, apiKeyHeader, signal)
-            : watchSSEEvents(endpoint, headers, credentials, signal, options.transport, lastEventId);
+            ? watchSocketEvents(endpoint, headers, credentials, apiKeyHeader, signal, changedEvent, resourceLabel)
+            : watchSSEEvents(endpoint, headers, credentials, signal, options.transport, changedEvent, resourceLabel, lastEventId);
           for await (const event of events) {
             if (signal.aborted) return;
             if (event.type === "connected") retry = 250;
             if (event.id && processedIds.has(event.id)) continue;
             const result = await read(signal);
             if (signal.aborted) return;
-            if (result.error) throw new Error(result.error.message);
+            const value = normalize(result);
             if (event.id) {
               lastEventId = event.id;
               processedIds.add(event.id);
               const oldest = processedIds.values().next().value;
               if (processedIds.size > 1024 && oldest !== undefined) processedIds.delete(oldest);
             }
-            const value = result.data && Object.keys(result.data).length ? result.data : null;
             const serialized = JSON.stringify(value);
             if (serialized !== previous) {
               previous = serialized;
@@ -2458,8 +2597,10 @@ async function* watchSSEEvents(
   credentials: RequestCredentials | undefined,
   signal: AbortSignal,
   transport: "sse" | "durable",
+  changedEvent: WatchChangedEventName,
+  resourceLabel: "global" | "collection",
   lastEventId?: string,
-): AsyncGenerator<GlobalWatchEvent> {
+): AsyncGenerator<WatchEvent> {
   const url = transport === "durable"
     ? endpoint + "?transport=durable" + (lastEventId ? "&lastEventId=" + encodeURIComponent(lastEventId) : "")
     : endpoint;
@@ -2477,7 +2618,7 @@ async function* watchSSEEvents(
   if (!response.ok || !response.body ||
       !response.headers.get("content-type")?.startsWith("text/event-stream")) {
     await response.body?.cancel();
-    throw new Error("Could not subscribe to the global (HTTP " + response.status + ")");
+    throw new Error("Could not subscribe to the " + resourceLabel + " (HTTP " + response.status + ")");
   }
 
   const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -2500,8 +2641,8 @@ async function* watchSSEEvents(
         if (type === "connected") {
           connected = true;
           yield { type };
-        } else if (connected && type === "global.changed") {
-          yield { type, id };
+        } else if (connected && type === changedEvent) {
+          yield { type: changedEvent, id };
         }
         type = "";
         id = undefined;
@@ -2519,7 +2660,9 @@ async function* watchSocketEvents(
   credentials: RequestCredentials | undefined,
   apiKeyHeader: string,
   signal: AbortSignal,
-): AsyncGenerator<GlobalWatchEvent> {
+  changedEvent: WatchChangedEventName,
+  resourceLabel: "global" | "collection",
+): AsyncGenerator<WatchEvent> {
   const url = new URL(endpoint + "/ws", globalThis.location?.href);
   const origin = url.origin;
   url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
@@ -2528,7 +2671,7 @@ async function* watchSocketEvents(
     (credentials !== "omit" && (!globalThis.location || globalThis.location.origin === origin));
   let failure: string | undefined;
   let connected = false;
-  const stream = new ReadableStream<GlobalWatchEvent>({
+  const stream = new ReadableStream<WatchEvent>({
     start(controller) {
       const finish = () => {
         signal.removeEventListener("abort", finish);
@@ -2554,21 +2697,21 @@ async function* watchSocketEvents(
       });
       socket.addEventListener("message", (message) => {
         if (signal.aborted || typeof message.data !== "string") return;
-        const frame = parseGlobalWatchFrame(message.data);
+        const frame = parseWatchFrame(message.data);
         if (!frame) return;
         switch (frame.type) {
           case "watch.ready":
             connected = true;
             controller.enqueue({ type: "connected" });
             break;
-          case "global.changed":
-            if (connected) controller.enqueue({ type: "global.changed" });
+          case changedEvent:
+            if (connected) controller.enqueue({ type: changedEvent });
             break;
           case "ping":
             socket.send('{"type":"pong"}');
             break;
           case "error":
-            failure = frame.message ?? "Could not subscribe to the global";
+            failure = frame.message ?? ("Could not subscribe to the " + resourceLabel);
             socket.close();
             break;
         }
@@ -2589,7 +2732,7 @@ async function* watchSocketEvents(
   }
 }
 
-function parseGlobalWatchFrame(raw: string): { type?: string; message?: string } | undefined {
+function parseWatchFrame(raw: string): { type?: string; message?: string } | undefined {
   try {
     const value: unknown = JSON.parse(raw);
     if (value && typeof value === "object" && "type" in value && typeof value.type === "string") {
@@ -2634,38 +2777,46 @@ export class CequreClient extends CequreCore {
 
   private _cache: Record<string, any> = {};
 
-  private _init_tasks() {
+  private _init_blogs() {
     return {
-      schema: {"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"isCompleted":{"type":"boolean","required":false}} as const,
-      object: TasksObject,
-      get: ((params?: { id?: string; query?: TasksQueryInput; depth?: number }) => {
+      schema: {"title":{"type":"text","required":true},"description":{"type":"textarea","required":false},"image":{"type":"upload","required":true},"isCompleted":{"type":"boolean","required":false}} as const,
+      object: BlogsObject,
+      get: ((params?: { id?: string; query?: BlogsQueryInput; depth?: number }) => {
         const qObj = params?.query || ((params as any)?.depth !== undefined ? { depth: (params as any).depth } : undefined);
-        if (params?.id) return this.request<any>('GET', `/api/tasks/${params.id}${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
-        return this.request<any>('GET', `/api/tasks${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
+        if (params?.id) return this.request<any>('GET', `/api/blogs/${params.id}${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
+        return this.request<any>('GET', `/api/blogs${qObj ? '?' + new URLSearchParams({ q: JSON.stringify(qObj) }).toString() : ''}`);
       }) as {
-        (params: { id: string, query: { depth: 2 } }): Promise<SDKResponse<TasksPopulatedDepth2>>;
-        (params: { id: string, query: { depth: 1 } }): Promise<SDKResponse<TasksPopulated>>;
-        (params: { id: string, query?: { depth?: number } }): Promise<SDKResponse<Tasks>>;
-        (params: { query: TasksQueryInput & { depth: 2 } }): Promise<SDKResponse<PaginatedTasksPopulatedDepth2>>;
-        (params: { query: TasksQueryInput & { depth: 1 } }): Promise<SDKResponse<PaginatedTasksPopulated>>;
-        (params?: { query?: TasksQueryInput }): Promise<SDKResponse<PaginatedTasks>>;
+        (params: { id: string, query: { depth: 2 } }): Promise<SDKResponse<BlogsPopulatedDepth2>>;
+        (params: { id: string, query: { depth: 1 } }): Promise<SDKResponse<BlogsPopulated>>;
+        (params: { id: string, query?: { depth?: number } }): Promise<SDKResponse<Blogs>>;
+        (params: { query: BlogsQueryInput & { depth: 2 } }): Promise<SDKResponse<PaginatedBlogsPopulatedDepth2>>;
+        (params: { query: BlogsQueryInput & { depth: 1 } }): Promise<SDKResponse<PaginatedBlogsPopulated>>;
+        (params?: { query?: BlogsQueryInput }): Promise<SDKResponse<PaginatedBlogs>>;
       },
-      post: (data: TasksCreateInput) => this.request<Tasks>('POST', `/api/tasks`, data),
-      patch: (id: string, data: TasksUpdateInput) => this.request<Tasks>('PATCH', `/api/tasks/${id}`, data),
-      delete: (id: string) => this.request<void>('DELETE', `/api/tasks/${id}`),
-      createMany: (items: TasksCreateInput[]) => this.request<{ created: Tasks[]; errors: { index: number; error: unknown }[] }>('POST', `/api/tasks/bulk`, { items }),
-      deleteMany: (ids: string[]) => this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>('DELETE', `/api/tasks/bulk`, { ids }),
-      subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Tasks }) => void) => await this.subscribeSSE('tasks', onEvent),
-      subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Tasks }) => void) => await this.subscribeWS('tasks', onEvent),
-      subscribeDurableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Tasks>[]>('GET', `/api/tasks/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      post: (data: BlogsCreateInput) => this.request<Blogs>('POST', `/api/blogs`, data),
+      patch: (id: string, data: BlogsUpdateInput) => this.request<Blogs>('PATCH', `/api/blogs/${id}`, data),
+      delete: (id: string) => this.request<void>('DELETE', `/api/blogs/${id}`),
+      createMany: (items: BlogsCreateInput[]) => this.request<{ created: Blogs[]; errors: { index: number; error: unknown }[] }>('POST', `/api/blogs/bulk`, { items }),
+      deleteMany: (ids: string[]) => this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>('DELETE', `/api/blogs/bulk`, { ids }),
+      subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Blogs }) => void) => await this.subscribeSSE('blogs', onEvent),
+      subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Blogs }) => void) => await this.subscribeWS('blogs', onEvent),
+      subscribeDurableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Blogs>[]>('GET', `/api/blogs/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      watch: ((options: CollectionWatchOptions<BlogsQueryInput>) => this.watchCollection<unknown>("blogs", options)) as unknown as {
+        (options: GlobalWatchOptions & { id: string; query: { depth: 2 } }): AsyncIterable<BlogsPopulatedDepth2 | null>;
+        (options: GlobalWatchOptions & { id: string; query: { depth: 1 } }): AsyncIterable<BlogsPopulated | null>;
+        (options: GlobalWatchOptions & { id: string; query?: { depth?: number }; depth?: number }): AsyncIterable<Blogs | null>;
+        (options: GlobalWatchOptions & { query: BlogsQueryInput & { depth: 2 } }): AsyncIterable<PaginatedBlogsPopulatedDepth2 | null>;
+        (options: GlobalWatchOptions & { query: BlogsQueryInput & { depth: 1 } }): AsyncIterable<PaginatedBlogsPopulated | null>;
+        (options: GlobalWatchOptions & { query?: BlogsQueryInput; depth?: number }): AsyncIterable<PaginatedBlogs | null>;
+      },
     };
   }
 
-  get tasks(): ReturnType<typeof this._init_tasks> {
-    if (!this._cache['tasks']) {
-      this._cache['tasks'] = this._init_tasks();
+  get blogs(): ReturnType<typeof this._init_blogs> {
+    if (!this._cache['blogs']) {
+      this._cache['blogs'] = this._init_blogs();
     }
-    return this._cache['tasks'];
+    return this._cache['blogs'];
   }
 
   private _init_users() {
@@ -2692,6 +2843,14 @@ export class CequreClient extends CequreCore {
       subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Users }) => void) => await this.subscribeSSE('users', onEvent),
       subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Users }) => void) => await this.subscribeWS('users', onEvent),
       subscribeDurableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Users>[]>('GET', `/api/users/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      watch: ((options: CollectionWatchOptions<UsersQueryInput>) => this.watchCollection<unknown>("users", options)) as unknown as {
+        (options: GlobalWatchOptions & { id: string; query: { depth: 2 } }): AsyncIterable<UsersPopulatedDepth2 | null>;
+        (options: GlobalWatchOptions & { id: string; query: { depth: 1 } }): AsyncIterable<UsersPopulated | null>;
+        (options: GlobalWatchOptions & { id: string; query?: { depth?: number }; depth?: number }): AsyncIterable<Users | null>;
+        (options: GlobalWatchOptions & { query: UsersQueryInput & { depth: 2 } }): AsyncIterable<PaginatedUsersPopulatedDepth2 | null>;
+        (options: GlobalWatchOptions & { query: UsersQueryInput & { depth: 1 } }): AsyncIterable<PaginatedUsersPopulated | null>;
+        (options: GlobalWatchOptions & { query?: UsersQueryInput; depth?: number }): AsyncIterable<PaginatedUsers | null>;
+      },
       changePassword: {
         postChangePassword: (data?: unknown) => this.request<unknown>('POST', `/api/users/change-password`, data),
         post: (data?: unknown) => this.request<unknown>('POST', `/api/users/change-password`, data),
@@ -2900,36 +3059,44 @@ export class CequreRealtimeClient extends CequreRealtimeCore {
 
   private _cache: Record<string, any> = {};
 
-  private _init_realtime_tasks() {
+  private _init_realtime_blogs() {
     return {
-      query: async (params?: { query?: TasksQueryInput; depth?: number }): Promise<Tasks[]> => {
-        return this.queryCollection<Tasks>('tasks', params);
+      query: async (params?: { query?: BlogsQueryInput; depth?: number }): Promise<Blogs[]> => {
+        return this.queryCollection<Blogs>('blogs', params);
       },
       subscribe: (
-        params: { query?: TasksQueryInput; depth?: number } | undefined,
-        callback: (data: Tasks[]) => void
+        params: { query?: BlogsQueryInput; depth?: number } | undefined,
+        callback: (data: Blogs[]) => void
       ): (() => void) => {
-        return this.subscribeCollection<Tasks>('tasks', params, callback);
+        return this.subscribeCollection<Blogs>('blogs', params, callback);
+      },
+      watch: ((options?: Omit<CollectionWatchOptions<BlogsQueryInput>, "transport"> & { transport?: GlobalWatchOptions["transport"] }) => this.client.watchCollection<unknown>("blogs", { transport: "sse", ...options })) as unknown as {
+        (options: Partial<GlobalWatchOptions> & { id: string; query: { depth: 2 } }): AsyncIterable<BlogsPopulatedDepth2 | null>;
+        (options: Partial<GlobalWatchOptions> & { id: string; query: { depth: 1 } }): AsyncIterable<BlogsPopulated | null>;
+        (options: Partial<GlobalWatchOptions> & { id: string; query?: { depth?: number }; depth?: number }): AsyncIterable<Blogs | null>;
+        (options: Partial<GlobalWatchOptions> & { query: BlogsQueryInput & { depth: 2 } }): AsyncIterable<PaginatedBlogsPopulatedDepth2 | null>;
+        (options: Partial<GlobalWatchOptions> & { query: BlogsQueryInput & { depth: 1 } }): AsyncIterable<PaginatedBlogsPopulated | null>;
+        (options?: Partial<GlobalWatchOptions> & { query?: BlogsQueryInput; depth?: number }): AsyncIterable<PaginatedBlogs | null>;
       },
       mutate: {
-        create: async (data: TasksCreateInput): Promise<Tasks> => {
-          return this.mutateCreate<Tasks, TasksCreateInput>('tasks', data, () => (this.client as any).tasks.post(data));
+        create: async (data: BlogsCreateInput): Promise<Blogs> => {
+          return this.mutateCreate<Blogs, BlogsCreateInput>('blogs', data, () => (this.client as any).blogs.post(data));
         },
-        patch: async (id: string, data: TasksUpdateInput): Promise<Tasks> => {
-          return this.mutatePatch<Tasks, TasksUpdateInput>('tasks', id, data, () => (this.client as any).tasks.patch(id, data));
+        patch: async (id: string, data: BlogsUpdateInput): Promise<Blogs> => {
+          return this.mutatePatch<Blogs, BlogsUpdateInput>('blogs', id, data, () => (this.client as any).blogs.patch(id, data));
         },
         delete: async (id: string): Promise<void> => {
-          return this.mutateDelete('tasks', id, () => (this.client as any).tasks.delete(id));
+          return this.mutateDelete('blogs', id, () => (this.client as any).blogs.delete(id));
         },
       }
     };
   }
 
-  get tasks(): ReturnType<typeof this._init_realtime_tasks> {
-    if (!this._cache['tasks']) {
-      this._cache['tasks'] = this._init_realtime_tasks();
+  get blogs(): ReturnType<typeof this._init_realtime_blogs> {
+    if (!this._cache['blogs']) {
+      this._cache['blogs'] = this._init_realtime_blogs();
     }
-    return this._cache['tasks'];
+    return this._cache['blogs'];
   }
 
   private _init_realtime_users() {
@@ -2942,6 +3109,14 @@ export class CequreRealtimeClient extends CequreRealtimeCore {
         callback: (data: Users[]) => void
       ): (() => void) => {
         return this.subscribeCollection<Users>('users', params, callback);
+      },
+      watch: ((options?: Omit<CollectionWatchOptions<UsersQueryInput>, "transport"> & { transport?: GlobalWatchOptions["transport"] }) => this.client.watchCollection<unknown>("users", { transport: "sse", ...options })) as unknown as {
+        (options: Partial<GlobalWatchOptions> & { id: string; query: { depth: 2 } }): AsyncIterable<UsersPopulatedDepth2 | null>;
+        (options: Partial<GlobalWatchOptions> & { id: string; query: { depth: 1 } }): AsyncIterable<UsersPopulated | null>;
+        (options: Partial<GlobalWatchOptions> & { id: string; query?: { depth?: number }; depth?: number }): AsyncIterable<Users | null>;
+        (options: Partial<GlobalWatchOptions> & { query: UsersQueryInput & { depth: 2 } }): AsyncIterable<PaginatedUsersPopulatedDepth2 | null>;
+        (options: Partial<GlobalWatchOptions> & { query: UsersQueryInput & { depth: 1 } }): AsyncIterable<PaginatedUsersPopulated | null>;
+        (options?: Partial<GlobalWatchOptions> & { query?: UsersQueryInput; depth?: number }): AsyncIterable<PaginatedUsers | null>;
       },
       mutate: {
         create: async (data: UsersCreateInput): Promise<Users> => {

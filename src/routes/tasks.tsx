@@ -1,8 +1,12 @@
-import { live } from "@solidjs/web/server-functions";
+import { GET, live, serverFunctionUrl } from "@solidjs/web/server-functions";
 import { getRequestEvent } from "@solidjs/web";
 import { sdkClient } from "@libs/sdk";
 import { formAction } from "@solidjs/router";
-import { createMemo, createSignal, For, Loading } from "solid-js";
+import { createMemo, createSignal, For, Loading, Show } from "solid-js";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const addTask = formAction(
   async (form: FormData) => {
@@ -11,9 +15,7 @@ const addTask = formAction(
     const value = form.get("title");
     const title = typeof value === "string" ? value.trim() : "";
     if (!title) return { error: "Enter a task title." };
-
-    const { error } = await sdkClient().tasks.get();
-
+    const { error } = await sdkClient().blogs.get();
     return { error: error?.message ?? null };
   },
   { name: "add-task" },
@@ -22,14 +24,25 @@ const addTask = formAction(
 export const liveTasks = live(async () => {
   "use server";
 
-  return sdkClient().tasks.watch({
+  return sdkClient().blogs.watch({
+    query: {
+      sort: "-createdAt",
+    },
     signal: getRequestEvent()?.request.signal,
     transport: "sse",
   });
 });
 
+export const imagesUrl = GET(async (filename: string) => {
+  "use server";
+  const { data, error } = await sdkClient().uploads.get(filename);
+  console.log({ data, error });
+  return data || "";
+});
+
 export default function Tasks() {
-  const tasks = createMemo(() => liveTasks());
+  const allTasks = createMemo(() => liveTasks());
+
   const [title, setTitle] = createSignal("");
   const [submitting, setSubmitting] = createSignal(false);
   const [error, setError] = createSignal("");
@@ -41,13 +54,9 @@ export default function Tasks() {
 
   addTask.onSettled((submission) => {
     setSubmitting(false);
-    if (submission.error) {
-      setError("Could not add the task. Please try again.");
-    } else if (submission.result?.error) {
-      setError(submission.result.error);
-    } else {
-      setTitle("");
-    }
+    if (submission.error) setError("Could not add the task. Please try again.");
+    else if (submission.result?.error) setError(submission.result.error);
+    else setTitle("");
   });
 
   return (
@@ -67,10 +76,26 @@ export default function Tasks() {
           {submitting() ? "Adding…" : "Add task"}
         </button>
       </form>
-      <p role="alert">{error()}</p>
+
+      <Show when={error()}>
+        <p role="alert">{error()}</p>
+      </Show>
+
       <Loading fallback={<p>Loading tasks…</p>}>
-        <For each={tasks()} fallback={<p>No tasks yet.</p>}>
-          {(task) => <div>{task.title}</div>}
+        <For each={allTasks()?.docs} fallback={<p>No tasks yet.</p>}>
+          {(task) => (
+            <div class="flex flex-col border-b py-2 gap-4">
+              <div>
+                <p class=" text-xs text-base-content/50">{dayjs(task?.createdAt).fromNow()}</p>
+                <p class="font-bold text-xxl">{task.title}</p>
+              </div>
+              <Show when={task.image.filename}>
+                {(filename) => <img src={serverFunctionUrl(imagesUrl, filename())} />}
+              </Show>
+
+              <p class="text-sm text-base-content/80">{task.description}</p>
+            </div>
+          )}
         </For>
       </Loading>
     </div>

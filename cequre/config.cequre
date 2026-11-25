@@ -43,6 +43,7 @@ config {
 			enabled: true;
 		}
 		upload: {
+			
 			visibility: "private";
 		}
 	}

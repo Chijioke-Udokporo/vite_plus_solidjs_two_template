@@ -1,7 +1,8 @@
-collection tasks {
+collection blogs {
 	fields {
 		title: text @unique;
 		description: textarea @optional;
+		image: upload;
 		isCompleted: boolean @default(false) @optional;
 	}
 	access {

@@ -49,7 +49,7 @@ declare module "virtual:file-routes" {
     {
       path: "/tasks";
       page: true;
-      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/tasks"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/tasks")>>>;
+      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/tasks"), Extract<"liveTasks" | "imagesUrl" | "default", keyof typeof import("./src/routes/tasks")>>>;
       $$route?: undefined;
     }
   ];
@@ -77,7 +77,7 @@ declare module "virtual:file-routes" {
       path: "/tasks";
       id: "/tasks";
       page: true;
-      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/tasks"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/tasks")>>>;
+      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/tasks"), Extract<"liveTasks" | "imagesUrl" | "default", keyof typeof import("./src/routes/tasks")>>>;
       $$route?: undefined;
       children?: undefined;
     }
