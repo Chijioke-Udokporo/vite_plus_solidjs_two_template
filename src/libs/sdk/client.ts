@@ -31,25 +31,9 @@
  * // Subscribe to low-level realtime updates
  * const unsubscribe = api.users.subscribeWS((event) => console.log("User updated!", event.data));
  * 
- * --- 2. REACTIVE REALTIME CLIENT (Live Collection Subscriptions & Optimistic Mutations) ---
- * import { createCequreRealtimeClient } from './cequre-sdk';
- * 
- * export const liveApi = createCequreRealtimeClient({
- *   baseUrl: "http://localhost:3000",
- *   getToken: () => localStorage.getItem("token")
- * });
- * 
- * // One-shot query
- * // const users = await liveApi.users.query();
- * 
- * // Reactive subscription (auto-updates on creates/updates/deletes)
- * // const unsubscribe = liveApi.users.subscribe({ query: { where: { email: { contains: "@example.com" } } } }, (users) => {
- * //   console.log("Live users:", users);
- * // });
- * 
- * // Optimistic mutations
- * // await liveApi.users.mutate.create({ name: "Bob", email: "bob@example.com" });
- * 
+ * // Global values over an explicitly selected transport
+ * // const values = api.globals.site_settings.watch({ transport: "ws" });
+ *
  * --- SERVER / SSR USAGE (Remix, Next.js, etc.) ---
  * // Use .withToken() to create a safe clone for a specific user request
  * const serverApi = api.withToken(requestToken);
@@ -1317,6 +1301,24 @@ export class CequreCore {
     return null;
   }
 
+  /** @internal */
+  watchGlobal<T>(slug: string, options: GlobalWatchOptions): AsyncIterable<T | null> {
+    const path = "/api/globals/" + encodeURIComponent(slug);
+    return watchGlobal<T>(
+      this.config.baseUrl + path + "/watch",
+      async () => {
+        const headers = new Headers(await this.resolveHeaders());
+        const auth = await this.getAuthHeader();
+        if (auth && !headers.has("Authorization")) headers.set("Authorization", auth);
+        return headers;
+      },
+      this.config.credentials,
+      "x-api-key",
+      (signal) => this.request<T>("GET", path, undefined, {}, signal),
+      options,
+    );
+  }
+
   private async getAuthHeader(): Promise<string | null> {
     const t = await this.resolveToken();
     return t ? `Bearer ${t}` : null;
@@ -2370,6 +2372,263 @@ export class CequreRealtimeCore {
   }
 }
 
+export interface GlobalWatchOptions {
+  transport: "ws" | "sse" | "durable";
+  signal?: AbortSignal;
+}
+
+type GlobalWatchEvent = { type: "connected" | "global.changed"; id?: string };
+
+function watchGlobal<T>(
+  endpoint: string,
+  resolveHeaders: () => Promise<Headers>,
+  credentials: RequestCredentials | undefined,
+  apiKeyHeader: string,
+  read: (signal: AbortSignal) => Promise<SDKResponse<T>>,
+  options: GlobalWatchOptions,
+): AsyncIterable<T | null> {
+  if (options?.transport !== "ws" && options?.transport !== "sse" && options?.transport !== "durable") {
+    throw new TypeError('Global watch transport must be "ws", "sse", or "durable"');
+  }
+
+  return {
+    [Symbol.asyncIterator]() {
+      const stop = new AbortController();
+      const signal = options.signal ? AbortSignal.any([stop.signal, options.signal]) : stop.signal;
+      const values = consume();
+      return {
+        next: () => values.next(),
+        return: () => {
+          stop.abort();
+          return values.return(undefined);
+        },
+      };
+
+      async function* consume(): AsyncGenerator<T | null> {
+        let previous: string | undefined;
+        let retry = 250;
+        let lastEventId: string | undefined;
+        const processedIds = new Set<string>();
+        while (!signal.aborted) {
+          const headers = await resolveHeaders();
+          if (signal.aborted) return;
+          const events = options.transport === "ws"
+            ? watchSocketEvents(endpoint, headers, credentials, apiKeyHeader, signal)
+            : watchSSEEvents(endpoint, headers, credentials, signal, options.transport, lastEventId);
+          for await (const event of events) {
+            if (signal.aborted) return;
+            if (event.type === "connected") retry = 250;
+            if (event.id && processedIds.has(event.id)) continue;
+            const result = await read(signal);
+            if (signal.aborted) return;
+            if (result.error) throw new Error(result.error.message);
+            if (event.id) {
+              lastEventId = event.id;
+              processedIds.add(event.id);
+              const oldest = processedIds.values().next().value;
+              if (processedIds.size > 1024 && oldest !== undefined) processedIds.delete(oldest);
+            }
+            const value = result.data && Object.keys(result.data).length ? result.data : null;
+            const serialized = JSON.stringify(value);
+            if (serialized !== previous) {
+              previous = serialized;
+              yield value;
+            }
+          }
+          if (signal.aborted) return;
+          await new Promise<void>((resolve) => {
+            const finish = () => {
+              clearTimeout(timer);
+              signal.removeEventListener("abort", finish);
+              resolve();
+            };
+            const timer = setTimeout(finish, retry);
+            signal.addEventListener("abort", finish, { once: true });
+          });
+          retry = Math.min(retry * 2, 4000);
+        }
+      }
+    },
+  };
+}
+
+async function* watchSSEEvents(
+  endpoint: string,
+  headers: Headers,
+  credentials: RequestCredentials | undefined,
+  signal: AbortSignal,
+  transport: "sse" | "durable",
+  lastEventId?: string,
+): AsyncGenerator<GlobalWatchEvent> {
+  const url = transport === "durable"
+    ? endpoint + "?transport=durable" + (lastEventId ? "&lastEventId=" + encodeURIComponent(lastEventId) : "")
+    : endpoint;
+  let response: Response;
+  try {
+    response = await fetch(url, { headers, credentials, signal });
+  } catch (cause) {
+    if (signal.aborted || cause instanceof TypeError) return;
+    throw cause;
+  }
+  if (response.status >= 500) {
+    await response.body?.cancel();
+    return;
+  }
+  if (!response.ok || !response.body ||
+      !response.headers.get("content-type")?.startsWith("text/event-stream")) {
+    await response.body?.cancel();
+    throw new Error("Could not subscribe to the global (HTTP " + response.status + ")");
+  }
+
+  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+  try {
+    let pending = "";
+    let type = "";
+    let id: string | undefined;
+    let connected = false;
+    while (!signal.aborted) {
+      const chunk = await reader.read().catch(() => null);
+      if (!chunk || chunk.done) break;
+      pending += chunk.value;
+      let newline: number;
+      while ((newline = pending.indexOf("\n")) !== -1) {
+        const line = pending.slice(0, newline).replace(/\r$/, "");
+        pending = pending.slice(newline + 1);
+        if (line.startsWith("event:")) type = line.slice(6).trimStart();
+        if (line.startsWith("id:") && transport === "durable") id = line.slice(3).trimStart();
+        if (line !== "") continue;
+        if (type === "connected") {
+          connected = true;
+          yield { type };
+        } else if (connected && type === "global.changed") {
+          yield { type, id };
+        }
+        type = "";
+        id = undefined;
+      }
+    }
+  } finally {
+    await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
+
+async function* watchSocketEvents(
+  endpoint: string,
+  headers: Headers,
+  credentials: RequestCredentials | undefined,
+  apiKeyHeader: string,
+  signal: AbortSignal,
+): AsyncGenerator<GlobalWatchEvent> {
+  const url = new URL(endpoint + "/ws", globalThis.location?.href);
+  const origin = url.origin;
+  url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+  const socket = new WebSocket(url);
+  const cookiesAllowed = credentials === "include" ||
+    (credentials !== "omit" && (!globalThis.location || globalThis.location.origin === origin));
+  let failure: string | undefined;
+  let connected = false;
+  const stream = new ReadableStream<GlobalWatchEvent>({
+    start(controller) {
+      const finish = () => {
+        signal.removeEventListener("abort", finish);
+        controller.close();
+        socket.close();
+      };
+      signal.addEventListener("abort", finish, { once: true });
+      socket.addEventListener("close", () => {
+        if (signal.aborted) return;
+        signal.removeEventListener("abort", finish);
+        controller.close();
+      }, { once: true });
+      socket.addEventListener("open", () => {
+        socket.send(JSON.stringify({
+          type: "watch",
+          payload: {
+            authorization: headers.get("Authorization"),
+            apiKey: headers.get(apiKeyHeader) ?? headers.get("x-api-key"),
+            cookie: cookiesAllowed ? headers.get("Cookie") : null,
+            allowCookies: cookiesAllowed,
+          },
+        }));
+      });
+      socket.addEventListener("message", (message) => {
+        if (signal.aborted || typeof message.data !== "string") return;
+        const frame = parseGlobalWatchFrame(message.data);
+        if (!frame) return;
+        switch (frame.type) {
+          case "watch.ready":
+            connected = true;
+            controller.enqueue({ type: "connected" });
+            break;
+          case "global.changed":
+            if (connected) controller.enqueue({ type: "global.changed" });
+            break;
+          case "ping":
+            socket.send('{"type":"pong"}');
+            break;
+          case "error":
+            failure = frame.message ?? "Could not subscribe to the global";
+            socket.close();
+            break;
+        }
+      });
+    },
+  });
+  const reader = stream.getReader();
+  try {
+    while (!signal.aborted) {
+      const next = await reader.read();
+      if (next.done) break;
+      yield next.value;
+    }
+    if (failure) throw new Error(failure);
+  } finally {
+    reader.releaseLock();
+    socket.close();
+  }
+}
+
+function parseGlobalWatchFrame(raw: string): { type?: string; message?: string } | undefined {
+  try {
+    const value: unknown = JSON.parse(raw);
+    if (value && typeof value === "object" && "type" in value && typeof value.type === "string") {
+      return { type: value.type, message: "message" in value && typeof value.message === "string" ? value.message : undefined };
+    }
+  } catch {
+    // The watch endpoint only uses JSON protocol frames.
+  }
+}
+
+/** Send an async iterable as JSON Server-Sent Events through a Fetch handler. */
+export function toEventStreamResponse<T>(source: AsyncIterable<T>): Response {
+  const iterator = source[Symbol.asyncIterator]();
+  const encoder = new TextEncoder();
+  let cancelled = false;
+  return new Response(new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      try {
+        const item = await iterator.next();
+        if (cancelled) return;
+        if (item.done) controller.close();
+        else controller.enqueue(encoder.encode("data: " + (JSON.stringify(item.value) ?? "null") + "\n\n"));
+      } catch (error) {
+        if (!cancelled) controller.error(error);
+        await iterator.return?.();
+      }
+    },
+    async cancel() {
+      cancelled = true;
+      await iterator.return?.();
+    },
+  }), {
+    headers: {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
 
 export class CequreClient extends CequreCore {
 
@@ -2398,8 +2657,7 @@ export class CequreClient extends CequreCore {
       deleteMany: (ids: string[]) => this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>('DELETE', `/api/tasks/bulk`, { ids }),
       subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Tasks }) => void) => await this.subscribeSSE('tasks', onEvent),
       subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Tasks }) => void) => await this.subscribeWS('tasks', onEvent),
-      durableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Tasks>[]>('GET', `/api/tasks/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
-      stream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Tasks>[]>('GET', `/api/tasks/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      subscribeDurableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Tasks>[]>('GET', `/api/tasks/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
     };
   }
 
@@ -2433,8 +2691,7 @@ export class CequreClient extends CequreCore {
       deleteMany: (ids: string[]) => this.request<{ deleted: string[]; errors: { id: string; error: unknown }[] }>('DELETE', `/api/users/bulk`, { ids }),
       subscribeSSE: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Users }) => void) => await this.subscribeSSE('users', onEvent),
       subscribeWS: async (onEvent: (event: { type: 'created' | 'updated' | 'deleted'; data: Users }) => void) => await this.subscribeWS('users', onEvent),
-      durableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Users>[]>('GET', `/api/users/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
-      stream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Users>[]>('GET', `/api/users/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
+      subscribeDurableStream: (params?: { lastEventId?: string }) => this.request<StreamEvent<Users>[]>('GET', `/api/users/stream${params?.lastEventId ? '?lastEventId=' + encodeURIComponent(params.lastEventId) : ''}`),
       changePassword: {
         postChangePassword: (data?: unknown) => this.request<unknown>('POST', `/api/users/change-password`, data),
         post: (data?: unknown) => this.request<unknown>('POST', `/api/users/change-password`, data),
@@ -2711,7 +2968,8 @@ export class CequreRealtimeClient extends CequreRealtimeCore {
 }
 
 /**
- * Creates a new CequreRealtimeClient instance for reactive live queries and optimistic mutations.
+ * @deprecated Use createCequreClient() for realtime subscriptions and global watches.
+ * Existing reactive collection queries and optimistic mutations remain available here during migration.
  */
 export function createCequreRealtimeClient(config: CequreRealtimeConfig = {}) {
   return new CequreRealtimeClient(config);

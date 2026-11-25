@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "cequre client ./cequre/index.ts -o src/libs/sdk/client.ts",
+    "predev": "cequre generate && cequre client ./cequre/index.ts -o src/libs/sdk/client.ts",
     "build": "tsc && vp build",
     "dev": "cequre dev --app vp dev",
     "preview": "vp preview"
@@ -12,36 +12,38 @@
   "dependencies": {
     "@remix-run/cookie": "^1.0.3",
     "@solidjs/meta": "^2.0.0",
-    "@solidjs/router": "^2.0.0",
-    "@solidjs/web": "^2.0.2",
+    "@solidjs/router": "^2.0.1",
+    "@solidjs/web": "^2.0.4",
     "animate.css": "^4.1.1",
-    "daisyui": "^5.8.1",
+    "daisyui": "^5.8.2",
     "iconify-icon": "^3.0.5",
     "nitro": "^3.0.261103-rc",
     "solid-icons": "^2.0.0",
-    "solid-js": "^2.0.2"
+    "solid-js": "^2.0.4"
   },
   "devDependencies": {
-    "@solidjs/diagnostics": "^2.0.2",
+    "@solidjs/diagnostics": "^2.0.4",
     "@solidjs/testing-library": "^1.0.0-rc.2",
     "@solidjs/vite-plugin": "^3.0.1",
     "@tailwindcss/vite": "^4.3.5",
     "@types/bun": "latest",
     "@types/node": "latest",
-    "eslint-plugin-solid": "~0.20.0",
+    "eslint-plugin-solid": "~0.20.1",
     "filesystem-routing": "^0.5.0",
     "happy-dom": "^21.0.4",
-    "oxlint": "^1.94.0",
     "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
     "unimport": "^7.0.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
-    "vite-plus": "1.7.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8001",
+    "vite-plus": "1.8.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8001"
   },
   "devEngines": {
     "packageManager": {
       "name": "bun",
-      "version": "1.4.4",
+      "version": "1.4.5",
       "onFail": "download"
     }
   }

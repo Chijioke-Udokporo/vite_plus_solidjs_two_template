@@ -8,14 +8,4 @@ export const sdkClient = (token?: string) => {
   });
 };
 
-export const sdkWsClient = (token: string) => {
-  return SDK.createCequreRealtimeClient({
-    baseUrl: process.env.SERVER_ORIGIN!,
-    token,
-    onResponse: ({ url }) => {
-      console.log(url);
-    },
-  });
-};
-
 export type { SDK };

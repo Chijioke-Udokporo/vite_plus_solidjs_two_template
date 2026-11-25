@@ -47,9 +47,9 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
-      path: "/real";
+      path: "/tasks";
       page: true;
-      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/real"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/real")>>>;
+      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/tasks"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/tasks")>>>;
       $$route?: undefined;
     }
   ];
@@ -66,18 +66,18 @@ declare module "virtual:file-routes" {
       children?: undefined;
     },
     {
-      path: "/real";
-      id: "/real";
-      page: true;
-      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/real"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/real")>>>;
-      $$route?: undefined;
-      children?: undefined;
-    },
-    {
       path: "/login";
       id: "/login";
       page: true;
       $component: FileRouteLazyRef<Pick<typeof import("./src/routes/login"), Extract<"default", keyof typeof import("./src/routes/login")>>>;
+      $$route?: undefined;
+      children?: undefined;
+    },
+    {
+      path: "/tasks";
+      id: "/tasks";
+      page: true;
+      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/tasks"), Extract<"liveTasks" | "default", keyof typeof import("./src/routes/tasks")>>>;
       $$route?: undefined;
       children?: undefined;
     }

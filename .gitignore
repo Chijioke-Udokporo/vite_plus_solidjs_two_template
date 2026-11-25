@@ -34,3 +34,4 @@ uploads/
 .env
 
 cequre/_generated/
+.vitest/

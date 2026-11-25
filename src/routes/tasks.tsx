@@ -1,6 +1,6 @@
 import { live } from "@solidjs/web/server-functions";
 import { getRequestEvent } from "@solidjs/web";
-import { sdkClient, type SDK } from "@libs/sdk";
+import { sdkClient } from "@libs/sdk";
 import { formAction } from "@solidjs/router";
 import { createMemo, createSignal, For, Loading } from "solid-js";
 
@@ -12,66 +12,20 @@ const addTask = formAction(
     const title = typeof value === "string" ? value.trim() : "";
     if (!title) return { error: "Enter a task title." };
 
-    const { error } = await sdkClient().tasks.post({
-      title,
-    });
+    const { error } = await sdkClient().tasks.get();
+
     return { error: error?.message ?? null };
   },
   { name: "add-task" },
 );
 
-export const liveTasks = live(async function* () {
+export const liveTasks = live(async () => {
   "use server";
 
-  const api = sdkClient();
-  const signal = getRequestEvent()?.request.signal;
-  let changed = true;
-  let wake: (() => void) | undefined;
-  let unsubscribe: (() => void) | undefined;
-
-  const stop = () => {
-    unsubscribe?.();
-    wake?.();
-  };
-
-  signal?.addEventListener("abort", stop, { once: true });
-
-  try {
-    unsubscribe = await api.tasks.subscribeSSE(() => {
-      changed = true;
-      wake?.();
-    });
-
-    while (!signal?.aborted) {
-      if (!changed) {
-        await new Promise<void>((resolve) => {
-          wake = resolve;
-        });
-        wake = undefined;
-      }
-      if (signal?.aborted) break;
-      changed = false;
-
-      // Each yield is a complete snapshot, including every page.
-      const tasks: SDK.Tasks[] = [];
-      let page = 1;
-      while (!signal?.aborted) {
-        const { data, error } = await api.tasks.get({
-          query: { page, limit: 100, sort: "id" },
-        });
-        if (error) throw new Error(error.message);
-        if (!data) throw new Error("Could not load tasks");
-        tasks.push(...data.docs);
-        if (!data.hasNextPage) break;
-        page += 1;
-      }
-
-      if (!signal?.aborted) yield tasks;
-    }
-  } finally {
-    signal?.removeEventListener("abort", stop);
-    unsubscribe?.();
-  }
+  return sdkClient().tasks.watch({
+    signal: getRequestEvent()?.request.signal,
+    transport: "sse",
+  });
 });
 
 export default function Tasks() {
@@ -84,6 +38,7 @@ export default function Tasks() {
     setSubmitting(true);
     setError("");
   });
+
   addTask.onSettled((submission) => {
     setSubmitting(false);
     if (submission.error) {
