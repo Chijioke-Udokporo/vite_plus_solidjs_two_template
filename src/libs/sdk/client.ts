@@ -3042,27 +3042,6 @@ export class CequreClient extends CequreCore {
     return this._cache['ws'];
   }
 
-  private _init_cequreMedia() {
-    return {
-      get: () => this.request<unknown>('GET', `/api/cequre_media`),
-      byId: (id: string) => ({
-        get: () => this.request<unknown>('GET', `/api/cequre_media/${id}`),
-        delete: () => this.request<unknown>('DELETE', `/api/cequre_media/${id}`),
-        usage: {
-          getUsage: () => this.request<unknown>('GET', `/api/cequre_media/${id}/usage`),
-          get: () => this.request<unknown>('GET', `/api/cequre_media/${id}/usage`),
-        },
-      })
-    };
-  }
-
-  get cequreMedia(): ReturnType<typeof this._init_cequreMedia> {
-    if (!this._cache['cequreMedia']) {
-      this._cache['cequreMedia'] = this._init_cequreMedia();
-    }
-    return this._cache['cequreMedia'];
-  }
-
   private _init_admin() {
     return {
       get: () => this.request<unknown>('GET', `/admin`),

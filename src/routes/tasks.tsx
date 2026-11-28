@@ -25,9 +25,7 @@ export const liveTasks = live(async () => {
   "use server";
 
   return sdkClient().blogs.watch({
-    query: {
-      sort: "-createdAt",
-    },
+    query: { sort: "-createdAt", limit: 5 },
     signal: getRequestEvent()?.request.signal,
     transport: "sse",
   });
@@ -35,8 +33,7 @@ export const liveTasks = live(async () => {
 
 export const imagesUrl = GET(async (filename: string) => {
   "use server";
-  const { data, error } = await sdkClient().uploads.get(filename);
-  console.log({ data, error });
+  const { data } = await sdkClient().uploads.get(filename);
   return data || "";
 });
 
